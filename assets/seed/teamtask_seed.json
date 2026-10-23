@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "users": [
+    {
+      "id": "user-esra-1",
+      "name": "Esra Yılmaz",
+      "email": "esra@teamtask.com",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-10-01T09:00:00.000Z"
+    },
+    {
+      "id": "user-fahri-2",
+      "name": "Fahri Faruk",
+      "email": "fahri@teamtask.com",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-10-01T09:15:00.000Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-bitirme-1",
+      "name": "Bitirme Projesi",
+      "description": "Mobil kanban ve ekip iş birliği uygulaması teslimi.",
+      "inviteCode": "TT2026",
+      "ownerId": "user-esra-1",
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-20T12:00:00.000Z"
+    }
+  ],
+  "memberships": [
+    {
+      "id": "mem-1",
+      "projectId": "proj-bitirme-1",
+      "userId": "user-esra-1",
+      "role": "owner",
+      "joinedAt": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "mem-2",
+      "projectId": "proj-bitirme-1",
+      "userId": "user-fahri-2",
+      "role": "member",
+      "joinedAt": "2026-10-01T10:30:00.000Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-1",
+      "projectId": "proj-bitirme-1",
+      "number": 1,
+      "title": "Veritabanı ve Yerel Veri Modeli",
+      "description": "Hive adapterları ve repository sözleşmelerini tanımla.",
+      "status": "done",
+      "priority": "medium",
+      "assigneeId": "user-esra-1",
+      "dueDate": "2026-10-15T18:00:00.000Z",
+      "createdBy": "user-esra-1",
+      "createdAt": "2026-10-02T10:00:00.000Z",
+      "updatedAt": "2026-10-15T17:30:00.000Z"
+    },
+    {
+      "id": "task-2",
+      "projectId": "proj-bitirme-1",
+      "number": 2,
+      "title": "Mobil Arayüz ve Kanban Kolonları",
+      "description": "Tasarım tokenlarına uygun kanban arayüzü ve kartları geliştir.",
+      "status": "in_progress",
+      "priority": "medium",
+      "assigneeId": "user-fahri-2",
+      "dueDate": "2026-10-25T18:00:00.000Z",
+      "createdBy": "user-esra-1",
+      "createdAt": "2026-10-03T11:00:00.000Z",
+      "updatedAt": "2026-10-21T14:00:00.000Z"
+    },
+    {
+      "id": "task-3",
+      "projectId": "proj-bitirme-1",
+      "number": 3,
+      "title": "Sürükle-Bırak ve İyimser Güncelleme",
+      "description": "Kartların kolonlar arası taşınması ve hata durumunda geri alma testi.",
+      "status": "todo",
+      "priority": "urgent",
+      "assigneeId": "user-fahri-2",
+      "dueDate": "2026-10-22T18:00:00.000Z",
+      "createdBy": "user-esra-1",
+      "createdAt": "2026-10-04T12:00:00.000Z",
+      "updatedAt": "2026-10-04T12:00:00.000Z"
+    },
+    {
+      "id": "task-4",
+      "projectId": "proj-bitirme-1",
+      "number": 4,
+      "title": "Sunum ve Demo Senaryosu Hazırlığı",
+      "description": "Öğretim görevlisine ve ekibe sunum hazırlığı yap.",
+      "status": "todo",
+      "priority": "low",
+      "assigneeId": "user-esra-1",
+      "dueDate": "2026-10-28T18:00:00.000Z",
+      "createdBy": "user-esra-1",
+      "createdAt": "2026-10-05T14:00:00.000Z",
+      "updatedAt": "2026-10-05T14:00:00.000Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1",
+      "projectId": "proj-bitirme-1",
+      "senderId": "user-esra-1",
+      "senderName": "Esra Yılmaz",
+      "text": "Selam Fahri! Bitirme projesi panosunu kurdum. Görevleri inceleyebilirsin.",
+      "createdAt": "2026-10-21T10:00:00.000Z"
+    },
+    {
+      "id": "msg-2",
+      "projectId": "proj-bitirme-1",
+      "senderId": "user-fahri-2",
+      "senderName": "Fahri Faruk",
+      "text": "Harika görünüyor Esra! Ben arayüz ve sürükle-bırak görevlerini üstlendim.",
+      "createdAt": "2026-10-21T10:05:00.000Z"
+    },
+    {
+      "id": "msg-3",
+      "projectId": "proj-bitirme-1",
+      "senderId": "user-esra-1",
+      "senderName": "Esra Yılmaz",
+      "text": "Süper, sunum öncesi tüm görevleri tamamlayıp test edelim.",
+      "createdAt": "2026-10-21T10:10:00.000Z"
+    }
+  ]
+}
