@@ -1,11 +1,11 @@
 {
-    "name": "team_task",
-    "short_name": "team_task",
+    "name": "TeamTask",
+    "short_name": "TeamTask",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Mobil kanban ve ekip görev yönetimi.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

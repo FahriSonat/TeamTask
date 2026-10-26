@@ -1,8 +1,12 @@
+// Dosya: lib/features/projects/data/models/project_model.dart
+// Projenin Hive modeli ve adapter'ı.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_type_ids.dart';
 import '../../domain/entities/project.dart';
 
+/// Veritabanı modeli.
 class ProjectModel {
   final String id;
   final String name;
@@ -22,6 +26,7 @@ class ProjectModel {
     required this.updatedAt,
   });
 
+  /// Model -> domain varlığı.
   Project toEntity() {
     return Project(
       id: id,
@@ -34,6 +39,7 @@ class ProjectModel {
     );
   }
 
+  /// Domain varlığı -> model.
   factory ProjectModel.fromEntity(Project project) {
     return ProjectModel(
       id: project.id,
@@ -46,6 +52,7 @@ class ProjectModel {
     );
   }
 
+  /// Seed JSON'undan model.
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
     return ProjectModel(
       id: json['id'] as String,
@@ -58,6 +65,7 @@ class ProjectModel {
     );
   }
 
+  /// Model -> JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -71,10 +79,12 @@ class ProjectModel {
   }
 }
 
+/// Elle yazılmış Hive adapter'ı.
 class ProjectModelAdapter extends TypeAdapter<ProjectModel> {
   @override
   final int typeId = HiveTypeIds.projectModel;
 
+  /// Diskten okur.
   @override
   ProjectModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
@@ -92,6 +102,7 @@ class ProjectModelAdapter extends TypeAdapter<ProjectModel> {
     );
   }
 
+  /// Diske yazar.
   @override
   void write(BinaryWriter writer, ProjectModel obj) {
     writer

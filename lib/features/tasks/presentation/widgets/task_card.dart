@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/widgets/task_card.dart
+// Görev kartı: öncelik, kod, başlık, atanan kişi ve teslim tarihi rozeti.
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_strings.dart';
@@ -9,6 +12,7 @@ import '../../../../core/utils/date_formatter.dart';
 import '../../../../shared/widgets/priority_badge.dart';
 import '../../domain/entities/task.dart';
 
+/// Pano ve Görevlerim listesinde kullanılan kart.
 class TaskCard extends StatelessWidget {
   final Task task;
   final String? assigneeName;
@@ -21,6 +25,7 @@ class TaskCard extends StatelessWidget {
     this.onTap,
   });
 
+  /// Gecikmişse kırmızı çerçeve; bugün/yarın teslimse sarı rozet.
   @override
   Widget build(BuildContext context) {
     final isOverdue = task.isOverdue;

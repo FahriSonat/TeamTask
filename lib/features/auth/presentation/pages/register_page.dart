@@ -1,3 +1,6 @@
+// Dosya: lib/features/auth/presentation/pages/register_page.dart
+// Kayıt ekranı (ad, e-posta, parola, parola tekrarı).
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -13,7 +16,9 @@ import '../../../../shared/widgets/app_text_field.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../../../../shared/widgets/responsive_center.dart';
 
+/// Yeni hesap oluşturma formu.
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -42,6 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  /// Tüm alanları doğrular ve AuthBloc'a kayıt olayı gönderir.
   void _submit() {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
@@ -72,6 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  /// Kayıt başarılıysa projelere geçer, hatada SnackBar gösterir.
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -92,177 +99,179 @@ class _RegisterPageState extends State<RegisterPage> {
         final isLoading = state is AuthLoading;
 
         return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.formPadding),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom -
-                      AppSpacing.formPadding * 2,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: AppSpacing.lg),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: context.primaryTintColor,
-                              borderRadius: BorderRadius.circular(10),
+          body: ResponsiveCenter(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.formPadding),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight:
+                        MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        MediaQuery.of(context).padding.bottom -
+                        AppSpacing.formPadding * 2,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: AppSpacing.lg),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: context.primaryTintColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.view_kanban_rounded,
+                                color: AppColors.primary,
+                                size: 28,
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.view_kanban_rounded,
-                              color: AppColors.primary,
-                              size: 28,
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(
+                              AppStrings.appName,
+                              style: AppTextStyles.appBarTitle.copyWith(
+                                color: context.isDark
+                                    ? Colors.white
+                                    : context.inkColor,
+                              ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        Text(
+                          AppStrings.registerTitle,
+                          style: AppTextStyles.headline.copyWith(
+                            color: context.isDark
+                                ? Colors.white
+                                : context.inkColor,
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            AppStrings.appName,
-                            style: AppTextStyles.appBarTitle.copyWith(
-                              color: context.isDark
-                                  ? Colors.white
-                                  : context.inkColor,
-                            ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          AppStrings.registerSubtitle,
+                          style: AppTextStyles.body.copyWith(
+                            color: context.isDark
+                                ? Colors.white.withValues(alpha: 0.85)
+                                : AppColors.inkMuted,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      Text(
-                        AppStrings.registerTitle,
-                        style: AppTextStyles.headline.copyWith(
-                          color: context.isDark
-                              ? Colors.white
-                              : context.inkColor,
                         ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        AppStrings.registerSubtitle,
-                        style: AppTextStyles.body.copyWith(
-                          color: context.isDark
-                              ? Colors.white.withValues(alpha: 0.85)
-                              : AppColors.inkMuted,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xxl),
-                      AppTextField(
-                        label: AppStrings.nameLabel,
-                        hint: AppStrings.nameHint,
-                        controller: _nameController,
-                        errorText: _nameError,
-                        prefixIcon: Icon(
-                          Icons.person_outline_rounded,
-                          color: context.isDark
-                              ? Colors.white70
-                              : context.inkMutedColor,
-                        ),
-                        onChanged: (_) {
-                          if (_nameError != null) {
-                            setState(() => _nameError = null);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: AppStrings.emailLabel,
-                        hint: AppStrings.emailHint,
-                        controller: _emailController,
-                        errorText: _emailError,
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: context.isDark
-                              ? Colors.white70
-                              : context.inkMutedColor,
-                        ),
-                        onChanged: (_) {
-                          if (_emailError != null) {
-                            setState(() => _emailError = null);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: AppStrings.passwordLabel,
-                        hint: AppStrings.passwordHint,
-                        controller: _passwordController,
-                        errorText: _passwordError,
-                        obscureText: _obscurePassword,
-                        prefixIcon: Icon(
-                          Icons.lock_outline_rounded,
-                          color: context.isDark
-                              ? Colors.white70
-                              : context.inkMutedColor,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                        const SizedBox(height: AppSpacing.xxl),
+                        AppTextField(
+                          label: AppStrings.nameLabel,
+                          hint: AppStrings.nameHint,
+                          controller: _nameController,
+                          errorText: _nameError,
+                          prefixIcon: Icon(
+                            Icons.person_outline_rounded,
                             color: context.isDark
                                 ? Colors.white70
                                 : context.inkMutedColor,
                           ),
-                          onPressed: () {
-                            setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            );
+                          onChanged: (_) {
+                            if (_nameError != null) {
+                              setState(() => _nameError = null);
+                            }
                           },
                         ),
-                        onChanged: (_) {
-                          if (_passwordError != null) {
-                            setState(() => _passwordError = null);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: AppStrings.passwordConfirmLabel,
-                        hint: AppStrings.passwordHint,
-                        controller: _passwordConfirmController,
-                        errorText: _confirmError,
-                        obscureText: _obscurePassword,
-                        prefixIcon: Icon(
-                          Icons.lock_outline_rounded,
-                          color: context.isDark
-                              ? Colors.white70
-                              : context.inkMutedColor,
+                        const SizedBox(height: AppSpacing.lg),
+                        AppTextField(
+                          label: AppStrings.emailLabel,
+                          hint: AppStrings.emailHint,
+                          controller: _emailController,
+                          errorText: _emailError,
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: context.isDark
+                                ? Colors.white70
+                                : context.inkMutedColor,
+                          ),
+                          onChanged: (_) {
+                            if (_emailError != null) {
+                              setState(() => _emailError = null);
+                            }
+                          },
                         ),
-                        onChanged: (_) {
-                          if (_confirmError != null) {
-                            setState(() => _confirmError = null);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.xxl),
-                      AppButton(
-                        text: AppStrings.registerButton,
-                        isLoading: isLoading,
-                        onPressed: _submit,
-                      ),
-                      const Spacer(),
-                      const SizedBox(height: AppSpacing.lg),
-                      Center(
-                        child: TextButton(
-                          onPressed: () => context.go('/login'),
-                          child: Text(
-                            AppStrings.alreadyHaveAccount,
-                            style: AppTextStyles.cardTitle.copyWith(
+                        const SizedBox(height: AppSpacing.lg),
+                        AppTextField(
+                          label: AppStrings.passwordLabel,
+                          hint: AppStrings.passwordHint,
+                          controller: _passwordController,
+                          errorText: _passwordError,
+                          obscureText: _obscurePassword,
+                          prefixIcon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: context.isDark
+                                ? Colors.white70
+                                : context.inkMutedColor,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
                               color: context.isDark
-                                  ? Colors.white
-                                  : AppColors.primary,
+                                  ? Colors.white70
+                                  : context.inkMutedColor,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              );
+                            },
+                          ),
+                          onChanged: (_) {
+                            if (_passwordError != null) {
+                              setState(() => _passwordError = null);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        AppTextField(
+                          label: AppStrings.passwordConfirmLabel,
+                          hint: AppStrings.passwordHint,
+                          controller: _passwordConfirmController,
+                          errorText: _confirmError,
+                          obscureText: _obscurePassword,
+                          prefixIcon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: context.isDark
+                                ? Colors.white70
+                                : context.inkMutedColor,
+                          ),
+                          onChanged: (_) {
+                            if (_confirmError != null) {
+                              setState(() => _confirmError = null);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: AppSpacing.xxl),
+                        AppButton(
+                          text: AppStrings.registerButton,
+                          isLoading: isLoading,
+                          onPressed: _submit,
+                        ),
+                        const Spacer(),
+                        const SizedBox(height: AppSpacing.lg),
+                        Center(
+                          child: TextButton(
+                            onPressed: () => context.go('/login'),
+                            child: Text(
+                              AppStrings.alreadyHaveAccount,
+                              style: AppTextStyles.cardTitle.copyWith(
+                                color: context.isDark
+                                    ? Colors.white
+                                    : AppColors.primary,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -1,7 +1,11 @@
+// Dosya: test/unit/validators_test.dart
+// Validators testleri: tüm uzunluk ve biçim sınırları.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:team_task/core/constants/app_strings.dart';
 import 'package:team_task/core/utils/validators.dart';
 
+/// Test grubu.
 void main() {
   group('Validators Test', () {
     test('validateEmail validates format', () {

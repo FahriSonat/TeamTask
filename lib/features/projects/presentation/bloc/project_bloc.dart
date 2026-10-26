@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/presentation/bloc/project_bloc.dart
+// Projeler, aktif proje ve üye listesinin durumu.
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/project.dart';
@@ -5,6 +8,7 @@ import '../../domain/repositories/project_repository.dart';
 import 'project_event.dart';
 import 'project_state.dart';
 
+/// Proje ekranlarının ortak durumu (ProjectsLoaded içinde proje + üye listesi).
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final ProjectRepository projectRepository;
 
@@ -17,6 +21,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     on<ProjectMemberAddRequested>(_onProjectMemberAddRequested);
   }
 
+  /// Projeleri yükler; aktif proje yoksa/geçersizse ilk projeyi seçer, üyelerini de getirir.
   Future<void> _onProjectsLoadRequested(
     ProjectsLoadRequested event,
     Emitter<ProjectState> emit,
@@ -59,6 +64,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
   }
 
+  /// Proje oluşturur, listenin başına ekler ve aktif yapar.
   Future<void> _onProjectCreateRequested(
     ProjectCreateRequested event,
     Emitter<ProjectState> emit,
@@ -90,6 +96,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
   }
 
+  /// Aktif projeyi değiştirir ve üyelerini yükler.
   Future<void> _onProjectSelectRequested(
     ProjectSelectRequested event,
     Emitter<ProjectState> emit,
@@ -112,6 +119,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  /// Belirli projenin üyelerini yeniler.
   Future<void> _onProjectMembersLoadRequested(
     ProjectMembersLoadRequested event,
     Emitter<ProjectState> emit,
@@ -126,6 +134,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  /// Demo üye ekler, ardından üye listesini yeniler.
   Future<void> _onProjectMemberAddRequested(
     ProjectMemberAddRequested event,
     Emitter<ProjectState> emit,

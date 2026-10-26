@@ -1,6 +1,10 @@
+// Dosya: test/unit/password_hasher_test.dart
+// PasswordHasher birim testleri: aynı girdi aynı özet, farklı girdi farklı özet.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:team_task/core/utils/password_hasher.dart';
 
+/// Test grubu.
 void main() {
   group('PasswordHasher Test', () {
     test('same input produces identical hash', () {

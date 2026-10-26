@@ -1,12 +1,18 @@
+// Dosya: lib/core/theme/app_theme.dart
+// Material 3 açık ve koyu tema tanımları.
+// AppBar, buton, input, kart gibi bileşenlerin varsayılan görünümü burada ayarlanır.
+
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 import 'app_spacing.dart';
 import 'app_text_styles.dart';
 
+/// Uygulama temaları.
 class AppTheme {
   const AppTheme._();
 
+  /// Aydınlık tema.
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -154,6 +160,7 @@ class AppTheme {
     );
   }
 
+  /// Karanlık tema.
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,

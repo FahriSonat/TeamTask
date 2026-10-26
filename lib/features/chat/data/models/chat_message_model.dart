@@ -1,8 +1,12 @@
+// Dosya: lib/features/chat/data/models/chat_message_model.dart
+// Mesajın Hive modeli ve adapter'ı.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_type_ids.dart';
 import '../../domain/entities/chat_message.dart';
 
+/// Veritabanı modeli.
 class ChatMessageModel {
   final String id;
   final String projectId;
@@ -20,6 +24,7 @@ class ChatMessageModel {
     required this.createdAt,
   });
 
+  /// Model -> domain varlığı.
   ChatMessage toEntity() {
     return ChatMessage(
       id: id,
@@ -31,6 +36,7 @@ class ChatMessageModel {
     );
   }
 
+  /// Domain varlığı -> model.
   factory ChatMessageModel.fromEntity(ChatMessage message) {
     return ChatMessageModel(
       id: message.id,
@@ -42,6 +48,7 @@ class ChatMessageModel {
     );
   }
 
+  /// Seed JSON'undan model.
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
     return ChatMessageModel(
       id: json['id'] as String,
@@ -53,6 +60,7 @@ class ChatMessageModel {
     );
   }
 
+  /// Model -> JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -65,10 +73,12 @@ class ChatMessageModel {
   }
 }
 
+/// Elle yazılmış Hive adapter'ı.
 class ChatMessageModelAdapter extends TypeAdapter<ChatMessageModel> {
   @override
   final int typeId = HiveTypeIds.chatMessageModel;
 
+  /// Diskten okur.
   @override
   ChatMessageModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
@@ -85,6 +95,7 @@ class ChatMessageModelAdapter extends TypeAdapter<ChatMessageModel> {
     );
   }
 
+  /// Diske yazar.
   @override
   void write(BinaryWriter writer, ChatMessageModel obj) {
     writer

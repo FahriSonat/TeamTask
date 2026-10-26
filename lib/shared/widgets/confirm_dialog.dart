@@ -1,3 +1,6 @@
+// Dosya: lib/shared/widgets/confirm_dialog.dart
+// Alttan açılan onay penceresi (silme, çıkış vb.).
+
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_strings.dart';
@@ -7,9 +10,11 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/theme_context_extension.dart';
 import 'app_button.dart';
 
+/// Kullanıcıdan evet/hayır onayı alır.
 class ConfirmDialog {
   const ConfirmDialog._();
 
+  /// Onaylanırsa true, vazgeçilirse veya kapatılırsa false döner.
   static Future<bool> show(
     BuildContext context, {
     required String title,

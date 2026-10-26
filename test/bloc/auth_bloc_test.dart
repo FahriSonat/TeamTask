@@ -1,3 +1,7 @@
+// Dosya: test/bloc/auth_bloc_test.dart
+// AuthBloc testleri: başarılı giriş, hatalı giriş ve çıkış.
+// Repository mocktail ile taklit edilir.
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,6 +15,7 @@ import 'package:team_task/features/auth/presentation/bloc/auth_state.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
+/// Test grubu.
 void main() {
   late MockAuthRepository mockAuthRepository;
   late AuthBloc authBloc;
@@ -39,8 +44,9 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoading, Authenticated] when session exists',
       build: () {
-        when(() => mockAuthRepository.getCurrentUser())
-            .thenAnswer((_) async => Result.success(testUser));
+        when(
+          () => mockAuthRepository.getCurrentUser(),
+        ).thenAnswer((_) async => Result.success(testUser));
         return authBloc;
       },
       act: (bloc) => bloc.add(const AuthCheckRequested()),
@@ -50,8 +56,9 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoading, Unauthenticated] when session is null',
       build: () {
-        when(() => mockAuthRepository.getCurrentUser())
-            .thenAnswer((_) async => const Result.success(null));
+        when(
+          () => mockAuthRepository.getCurrentUser(),
+        ).thenAnswer((_) async => const Result.success(null));
         return authBloc;
       },
       act: (bloc) => bloc.add(const AuthCheckRequested()),
@@ -100,8 +107,9 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoading, Unauthenticated] on logout',
       build: () {
-        when(() => mockAuthRepository.logout())
-            .thenAnswer((_) async => const Result.success(null));
+        when(
+          () => mockAuthRepository.logout(),
+        ).thenAnswer((_) async => const Result.success(null));
         return authBloc;
       },
       act: (bloc) => bloc.add(const AuthLogoutRequested()),

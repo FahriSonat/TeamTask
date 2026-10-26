@@ -1,5 +1,9 @@
+// Dosya: lib/core/theme/app_text_styles.dart
+// Yazı stilleri (başlık, gövde, etiket, açıklama).
+
 import 'package:flutter/material.dart';
 
+/// Ekranlarda tutarlı tipografi için hazır TextStyle'lar.
 class AppTextStyles {
   const AppTextStyles._();
 

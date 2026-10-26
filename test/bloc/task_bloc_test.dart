@@ -1,3 +1,6 @@
+// Dosya: test/bloc/task_bloc_test.dart
+// TaskBloc testleri: yükleme, iyimser durum güncelleme ve silme.
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,6 +15,7 @@ import 'package:team_task/features/tasks/presentation/bloc/task_state.dart';
 
 class MockTaskRepository extends Mock implements TaskRepository {}
 
+/// Test grubu.
 void main() {
   late MockTaskRepository mockTaskRepository;
   late TaskBloc taskBloc;
@@ -28,6 +32,9 @@ void main() {
     createdAt: DateTime.utc(2026, 10, 1),
     updatedAt: DateTime.utc(2026, 10, 1),
   );
+
+  // mocktail'in any() eşleştiricisi Task tipi için örnek bir değere ihtiyaç duyar.
+  setUpAll(() => registerFallbackValue(testTask));
 
   setUp(() {
     mockTaskRepository = MockTaskRepository();
@@ -46,8 +53,9 @@ void main() {
     blocTest<TaskBloc, TaskState>(
       'emits [TaskLoading, TasksLoaded] when tasks are loaded successfully',
       build: () {
-        when(() => mockTaskRepository.getTasksByProject('p1'))
-            .thenAnswer((_) async => Result.success([testTask]));
+        when(
+          () => mockTaskRepository.getTasksByProject('p1'),
+        ).thenAnswer((_) async => Result.success([testTask]));
         return taskBloc;
       },
       act: (bloc) => bloc.add(const TasksLoadRequested('p1')),
@@ -80,13 +88,36 @@ void main() {
     blocTest<TaskBloc, TaskState>(
       'removes task on TaskDeleted',
       build: () {
-        when(() => mockTaskRepository.deleteTask('t1'))
-            .thenAnswer((_) async => const Result.success(null));
+        when(
+          () => mockTaskRepository.deleteTask('t1'),
+        ).thenAnswer((_) async => const Result.success(null));
         return taskBloc;
       },
       seed: () => TasksLoaded(tasks: [testTask]),
       act: (bloc) => bloc.add(const TaskDeleted('t1')),
       expect: () => [const TasksLoaded(tasks: [])],
+    );
+
+    blocTest<TaskBloc, TaskState>(
+      'restores deleted task with the same code on TaskRestored',
+      build: () {
+        when(
+          () => mockTaskRepository.restoreTask(testTask),
+        ).thenAnswer((_) async => Result.success(testTask));
+        when(
+          () => mockTaskRepository.getTasksByProject('p1'),
+        ).thenAnswer((_) async => Result.success([testTask]));
+        return taskBloc;
+      },
+      seed: () => const TasksLoaded(tasks: []),
+      act: (bloc) => bloc.add(TaskRestored(testTask)),
+      expect: () => [
+        TasksLoaded(tasks: [testTask]),
+      ],
+      verify: (_) {
+        verify(() => mockTaskRepository.restoreTask(testTask)).called(1);
+        verifyNever(() => mockTaskRepository.addTask(any()));
+      },
     );
   });
 }

@@ -1,9 +1,13 @@
+// Dosya: lib/features/tasks/data/datasources/task_local_datasource.dart
+// Görevlerin Hive işlemleri ve projeye özel görev numarası sayacı.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_box_names.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/task_model.dart';
 
+/// Görev veri kaynağı sözleşmesi.
 abstract interface class TaskLocalDataSource {
   Future<List<TaskModel>> getTasksByProject(String projectId);
   Future<List<TaskModel>> getTasksAssignedTo(String userId);
@@ -13,12 +17,14 @@ abstract interface class TaskLocalDataSource {
   Future<int> getNextTaskNumber(String projectId);
 }
 
+/// Hive gerçeklemesi.
 class TaskLocalDataSourceImpl implements TaskLocalDataSource {
   final Box<TaskModel> taskBox;
   final Box sessionBox;
 
   TaskLocalDataSourceImpl({required this.taskBox, required this.sessionBox});
 
+  /// Projenin görevleri.
   @override
   Future<List<TaskModel>> getTasksByProject(String projectId) async {
     try {
@@ -31,6 +37,7 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
     }
   }
 
+  /// Kullanıcıya atanmış görevler (tüm projeler).
   @override
   Future<List<TaskModel>> getTasksAssignedTo(String userId) async {
     try {
@@ -41,6 +48,7 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
     }
   }
 
+  /// ID ile görev.
   @override
   Future<TaskModel?> getTaskById(String taskId) async {
     try {
@@ -50,6 +58,7 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
     }
   }
 
+  /// Görevi kaydeder / günceller.
   @override
   Future<void> saveTask(TaskModel task) async {
     try {
@@ -59,6 +68,7 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
     }
   }
 
+  /// Görevi siler.
   @override
   Future<void> deleteTask(String taskId) async {
     try {
@@ -68,6 +78,7 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
     }
   }
 
+  /// Sayacı bir artırıp yeni numarayı verir; silinen numaralar tekrar kullanılmaz.
   @override
   Future<int> getNextTaskNumber(String projectId) async {
     try {

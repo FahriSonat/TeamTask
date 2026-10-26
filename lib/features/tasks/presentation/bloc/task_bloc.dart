@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/bloc/task_bloc.dart
+// Aktif projenin görev listesini yöneten Bloc (pano, detay, form ortak kullanır).
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/task.dart';
@@ -5,6 +8,7 @@ import '../../domain/repositories/task_repository.dart';
 import 'task_event.dart';
 import 'task_state.dart';
 
+/// Hata olursa TaskError yayınlanıp eski liste geri yüklenir.
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskRepository taskRepository;
 
@@ -14,8 +18,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<TaskUpdated>(_onTaskUpdated);
     on<TaskDeleted>(_onTaskDeleted);
     on<TaskStatusChanged>(_onTaskStatusChanged);
+    on<TaskRestored>(_onTaskRestored);
   }
 
+  /// Projenin görevlerini yükler.
   Future<void> _onTasksLoadRequested(
     TasksLoadRequested event,
     Emitter<TaskState> emit,
@@ -28,6 +34,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
   }
 
+  /// Görevi ekler ve listenin başına koyar.
   Future<void> _onTaskAdded(TaskAdded event, Emitter<TaskState> emit) async {
     final result = await taskRepository.addTask(event.task);
     result.when(
@@ -51,6 +58,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
   }
 
+  /// Güncellenen görevi listede değiştirir.
   Future<void> _onTaskUpdated(
     TaskUpdated event,
     Emitter<TaskState> emit,
@@ -77,6 +85,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
   }
 
+  /// Önce listeden kaldırır (iyimser), kayıt silinemezse geri getirir.
   Future<void> _onTaskDeleted(
     TaskDeleted event,
     Emitter<TaskState> emit,
@@ -101,6 +110,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
   }
 
+  /// Sürükle-bırak: ekranda anında taşır, kayıt başarısızsa eski haline döner.
   Future<void> _onTaskStatusChanged(
     TaskStatusChanged event,
     Emitter<TaskState> emit,
@@ -140,6 +150,33 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         );
         emit(TasksLoaded(tasks: oldTasks));
       },
+    );
+  }
+
+  /// Silmeyi geri al: görevi geri kaydeder ve listeyi yeniden yükler,
+  /// böylece görev panodaki eski sırasına döner.
+  Future<void> _onTaskRestored(
+    TaskRestored event,
+    Emitter<TaskState> emit,
+  ) async {
+    final current = state;
+    final prev = current is TasksLoaded ? current.tasks : null;
+
+    final result = await taskRepository.restoreTask(event.task);
+    if (result.isFailure) {
+      emit(
+        TaskError(message: result.failureOrNull!.message, previousTasks: prev),
+      );
+      if (prev != null) emit(TasksLoaded(tasks: prev));
+      return;
+    }
+
+    final tasksResult = await taskRepository.getTasksByProject(
+      event.task.projectId,
+    );
+    tasksResult.when(
+      success: (tasks) => emit(TasksLoaded(tasks: tasks)),
+      failure: (_) => emit(TasksLoaded(tasks: [event.task, ...?prev])),
     );
   }
 }

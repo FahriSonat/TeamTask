@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/data/models/task_model.dart
+// Görevin Hive modeli ve adapter'ı (durum/öncelik metin olarak saklanır).
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_type_ids.dart';
@@ -5,6 +8,7 @@ import '../../domain/entities/task.dart';
 import '../../domain/enums/task_priority.dart';
 import '../../domain/enums/task_status.dart';
 
+/// Veritabanı modeli.
 class TaskModel {
   final String id;
   final String projectId;
@@ -34,6 +38,7 @@ class TaskModel {
     required this.updatedAt,
   });
 
+  /// Model -> domain varlığı.
   Task toEntity() {
     return Task(
       id: id,
@@ -51,6 +56,7 @@ class TaskModel {
     );
   }
 
+  /// Domain varlığı -> model.
   factory TaskModel.fromEntity(Task task) {
     return TaskModel(
       id: task.id,
@@ -68,6 +74,7 @@ class TaskModel {
     );
   }
 
+  /// Seed JSON'undan model.
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
       id: json['id'] as String,
@@ -87,6 +94,7 @@ class TaskModel {
     );
   }
 
+  /// Model -> JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -105,10 +113,12 @@ class TaskModel {
   }
 }
 
+/// Elle yazılmış Hive adapter'ı.
 class TaskModelAdapter extends TypeAdapter<TaskModel> {
   @override
   final int typeId = HiveTypeIds.taskModel;
 
+  /// Diskten okur.
   @override
   TaskModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
@@ -131,6 +141,7 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
     );
   }
 
+  /// Diske yazar.
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer

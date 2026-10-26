@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/cubit/my_tasks_cubit.dart
+// "Görevlerim" ekranı: oturumdaki kullanıcıya atanan görevler ve filtre.
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,8 +8,10 @@ import '../../domain/entities/task.dart';
 import '../../domain/enums/task_status.dart';
 import '../../domain/repositories/task_repository.dart';
 
+/// Filtre seçenekleri.
 enum MyTasksFilter { all, todo, inProgress, done }
 
+/// Görevlerim durumlarının atası.
 sealed class MyTasksState extends Equatable {
   const MyTasksState();
 
@@ -14,14 +19,17 @@ sealed class MyTasksState extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Henüz yüklenmedi.
 final class MyTasksInitial extends MyTasksState {
   const MyTasksInitial();
 }
 
+/// Yükleniyor.
 final class MyTasksLoading extends MyTasksState {
   const MyTasksLoading();
 }
 
+/// Tüm görevlerim + seçili filtre.
 final class MyTasksLoaded extends MyTasksState {
   final List<Task> allMyTasks;
   final MyTasksFilter filter;
@@ -31,6 +39,7 @@ final class MyTasksLoaded extends MyTasksState {
     this.filter = MyTasksFilter.all,
   });
 
+  /// Seçili filtreye göre gösterilecek görevler.
   List<Task> get filteredTasks {
     return switch (filter) {
       MyTasksFilter.all => allMyTasks,
@@ -58,6 +67,7 @@ final class MyTasksLoaded extends MyTasksState {
   List<Object?> get props => [allMyTasks, filter];
 }
 
+/// Hata mesajı.
 final class MyTasksError extends MyTasksState {
   final String message;
   const MyTasksError(this.message);
@@ -66,11 +76,13 @@ final class MyTasksError extends MyTasksState {
   List<Object?> get props => [message];
 }
 
+/// Görevlerim listesini yükler ve filtreler.
 class MyTasksCubit extends Cubit<MyTasksState> {
   final TaskRepository taskRepository;
 
   MyTasksCubit({required this.taskRepository}) : super(const MyTasksInitial());
 
+  /// Kullanıcıya atanan görevleri tüm projelerden yükler.
   Future<void> loadMyTasks(String userId) async {
     emit(const MyTasksLoading());
     final result = await taskRepository.getTasksAssignedTo(userId);
@@ -80,6 +92,7 @@ class MyTasksCubit extends Cubit<MyTasksState> {
     );
   }
 
+  /// Pano listesinden kullanıcıya ait olanları süzerek günceller.
   void updateFromProjectTasks(List<Task> allProjectTasks, String userId) {
     final assigned = allProjectTasks
         .where((t) => t.assigneeId == userId)
@@ -92,6 +105,7 @@ class MyTasksCubit extends Cubit<MyTasksState> {
     }
   }
 
+  /// Filtreyi değiştirir.
   void changeFilter(MyTasksFilter filter) {
     final current = state;
     if (current is MyTasksLoaded) {

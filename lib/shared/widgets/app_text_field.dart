@@ -1,3 +1,6 @@
+// Dosya: lib/shared/widgets/app_text_field.dart
+// Ortak metin alanı: üstte etiket, isteğe bağlı karakter sayacı ve hata mesajı.
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -5,6 +8,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/theme_context_extension.dart';
 
+/// Tüm formlarda kullanılan giriş alanı.
 class AppTextField extends StatelessWidget {
   final String label;
   final String? hint;
@@ -37,6 +41,7 @@ class AppTextField extends StatelessWidget {
     this.onTap,
   });
 
+  /// Etiket dar ekranda kısaltılır; maxLength varsa canlı sayaç gösterilir.
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,10 +51,13 @@ class AppTextField extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: AppTextStyles.label.copyWith(
-                color: context.isDark ? Colors.white : context.inkColor,
+            Flexible(
+              child: Text(
+                label,
+                style: AppTextStyles.label.copyWith(
+                  color: context.isDark ? Colors.white : context.inkColor,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             if (maxLength != null && controller != null)

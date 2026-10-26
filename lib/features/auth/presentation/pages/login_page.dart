@@ -1,3 +1,6 @@
+// Dosya: lib/features/auth/presentation/pages/login_page.dart
+// Giriş ekranı (e-posta + parola).
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -13,7 +16,9 @@ import '../../../../shared/widgets/app_text_field.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../../../../shared/widgets/responsive_center.dart';
 
+/// Giriş formu.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -35,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  /// Alanları doğrular; geçerliyse AuthBloc'a giriş olayı gönderir.
   void _submit() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -54,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  /// Başarılı girişte projelere geçer, hatada kırmızı SnackBar gösterir.
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -74,140 +81,143 @@ class _LoginPageState extends State<LoginPage> {
         final isLoading = state is AuthLoading;
 
         return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.formPadding),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom -
-                      AppSpacing.formPadding * 2,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: AppSpacing.xxl),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: context.primaryTintColor,
-                              borderRadius: BorderRadius.circular(10),
+          body: ResponsiveCenter(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.formPadding),
+                // İçerik kısa olsa bile ekranı doldursun diye en az ekran yüksekliği verilir (alt bağlantı en altta durur).
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight:
+                        MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        MediaQuery.of(context).padding.bottom -
+                        AppSpacing.formPadding * 2,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: AppSpacing.xxl),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: context.primaryTintColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.view_kanban_rounded,
+                                color: AppColors.primary,
+                                size: 28,
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.view_kanban_rounded,
-                              color: AppColors.primary,
-                              size: 28,
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(
+                              AppStrings.appName,
+                              style: AppTextStyles.appBarTitle.copyWith(
+                                color: context.isDark
+                                    ? Colors.white
+                                    : context.inkColor,
+                              ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xxxl),
+                        Text(
+                          AppStrings.loginTitle,
+                          style: AppTextStyles.headline.copyWith(
+                            color: context.isDark
+                                ? Colors.white
+                                : context.inkColor,
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            AppStrings.appName,
-                            style: AppTextStyles.appBarTitle.copyWith(
-                              color: context.isDark
-                                  ? Colors.white
-                                  : context.inkColor,
-                            ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          AppStrings.loginSubtitle,
+                          style: AppTextStyles.body.copyWith(
+                            color: context.isDark
+                                ? Colors.white.withValues(alpha: 0.85)
+                                : AppColors.inkMuted,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.xxxl),
-                      Text(
-                        AppStrings.loginTitle,
-                        style: AppTextStyles.headline.copyWith(
-                          color: context.isDark
-                              ? Colors.white
-                              : context.inkColor,
                         ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        AppStrings.loginSubtitle,
-                        style: AppTextStyles.body.copyWith(
-                          color: context.isDark
-                              ? Colors.white.withValues(alpha: 0.85)
-                              : AppColors.inkMuted,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xxxl),
-                      AppTextField(
-                        label: AppStrings.emailLabel,
-                        hint: AppStrings.emailHint,
-                        controller: _emailController,
-                        errorText: _emailError,
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: context.isDark
-                              ? Colors.white70
-                              : context.inkMutedColor,
-                        ),
-                        onChanged: (_) {
-                          if (_emailError != null) {
-                            setState(() => _emailError = null);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: AppStrings.passwordLabel,
-                        hint: AppStrings.passwordHint,
-                        controller: _passwordController,
-                        errorText: _passwordError,
-                        obscureText: _obscurePassword,
-                        prefixIcon: Icon(
-                          Icons.lock_outline_rounded,
-                          color: context.isDark
-                              ? Colors.white70
-                              : context.inkMutedColor,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                        const SizedBox(height: AppSpacing.xxxl),
+                        AppTextField(
+                          label: AppStrings.emailLabel,
+                          hint: AppStrings.emailHint,
+                          controller: _emailController,
+                          errorText: _emailError,
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
                             color: context.isDark
                                 ? Colors.white70
                                 : context.inkMutedColor,
                           ),
-                          onPressed: () {
-                            setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            );
+                          onChanged: (_) {
+                            if (_emailError != null) {
+                              setState(() => _emailError = null);
+                            }
                           },
                         ),
-                        onChanged: (_) {
-                          if (_passwordError != null) {
-                            setState(() => _passwordError = null);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.xxxl),
-                      AppButton(
-                        text: AppStrings.loginButton,
-                        isLoading: isLoading,
-                        onPressed: _submit,
-                      ),
-                      const Spacer(),
-                      const SizedBox(height: AppSpacing.lg),
-                      Center(
-                        child: TextButton(
-                          onPressed: () => context.go('/register'),
-                          child: Text(
-                            AppStrings.dontHaveAccount,
-                            style: AppTextStyles.cardTitle.copyWith(
+                        const SizedBox(height: AppSpacing.lg),
+                        AppTextField(
+                          label: AppStrings.passwordLabel,
+                          hint: AppStrings.passwordHint,
+                          controller: _passwordController,
+                          errorText: _passwordError,
+                          obscureText: _obscurePassword,
+                          prefixIcon: Icon(
+                            Icons.lock_outline_rounded,
+                            color: context.isDark
+                                ? Colors.white70
+                                : context.inkMutedColor,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
                               color: context.isDark
-                                  ? Colors.white
-                                  : AppColors.primary,
+                                  ? Colors.white70
+                                  : context.inkMutedColor,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              );
+                            },
+                          ),
+                          onChanged: (_) {
+                            if (_passwordError != null) {
+                              setState(() => _passwordError = null);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: AppSpacing.xxxl),
+                        AppButton(
+                          text: AppStrings.loginButton,
+                          isLoading: isLoading,
+                          onPressed: _submit,
+                        ),
+                        const Spacer(),
+                        const SizedBox(height: AppSpacing.lg),
+                        Center(
+                          child: TextButton(
+                            onPressed: () => context.go('/register'),
+                            child: Text(
+                              AppStrings.dontHaveAccount,
+                              style: AppTextStyles.cardTitle.copyWith(
+                                color: context.isDark
+                                    ? Colors.white
+                                    : AppColors.primary,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

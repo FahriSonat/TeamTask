@@ -1,5 +1,9 @@
+// Dosya: lib/features/auth/domain/entities/user.dart
+// Kullanıcı varlığı (domain). Parola özeti burada tutulmaz.
+
 import 'package:equatable/equatable.dart';
 
+/// Uygulamadaki kullanıcı; Equatable ile alan bazlı karşılaştırılır.
 class User extends Equatable {
   final String id;
   final String name;
@@ -13,6 +17,7 @@ class User extends Equatable {
     required this.createdAt,
   });
 
+  /// Bazı alanları değiştirilmiş yeni bir kopya üretir.
   User copyWith({
     String? id,
     String? name,

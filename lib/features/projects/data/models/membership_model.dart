@@ -1,9 +1,13 @@
+// Dosya: lib/features/projects/data/models/membership_model.dart
+// Üyeliğin Hive modeli ve adapter'ı.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_type_ids.dart';
 import '../../domain/entities/membership.dart';
 import '../../domain/enums/project_role.dart';
 
+/// Veritabanı modeli; rol metin olarak saklanır.
 class MembershipModel {
   final String id;
   final String projectId;
@@ -19,6 +23,7 @@ class MembershipModel {
     required this.joinedAt,
   });
 
+  /// Model -> domain varlığı.
   Membership toEntity() {
     return Membership(
       id: id,
@@ -29,6 +34,7 @@ class MembershipModel {
     );
   }
 
+  /// Domain varlığı -> model.
   factory MembershipModel.fromEntity(Membership membership) {
     return MembershipModel(
       id: membership.id,
@@ -39,6 +45,7 @@ class MembershipModel {
     );
   }
 
+  /// Seed JSON'undan model.
   factory MembershipModel.fromJson(Map<String, dynamic> json) {
     return MembershipModel(
       id: json['id'] as String,
@@ -49,6 +56,7 @@ class MembershipModel {
     );
   }
 
+  /// Model -> JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -60,10 +68,12 @@ class MembershipModel {
   }
 }
 
+/// Elle yazılmış Hive adapter'ı.
 class MembershipModelAdapter extends TypeAdapter<MembershipModel> {
   @override
   final int typeId = HiveTypeIds.membershipModel;
 
+  /// Diskten okur.
   @override
   MembershipModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
@@ -79,6 +89,7 @@ class MembershipModelAdapter extends TypeAdapter<MembershipModel> {
     );
   }
 
+  /// Diske yazar.
   @override
   void write(BinaryWriter writer, MembershipModel obj) {
     writer

@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/presentation/pages/projects_page.dart
+// Projeler listesi: kullanıcının projeleri, aktif proje vurgusu, tema ve çıkış.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +20,9 @@ import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/project_bloc.dart';
 import '../bloc/project_event.dart';
 import '../bloc/project_state.dart';
+import '../../../../shared/widgets/responsive_center.dart';
 
+/// Giriş sonrası ilk ekran.
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
 
@@ -32,6 +37,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     _loadProjects();
   }
 
+  /// Oturumdaki kullanıcının projelerini yükler.
   void _loadProjects() {
     final authState = context.read<AuthBloc>().state;
     if (authState is Authenticated) {
@@ -39,6 +45,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     }
   }
 
+  /// Çıkış yapılınca login'e döner; proje kartına dokununca panosu açılır.
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -81,139 +88,146 @@ class _ProjectsPageState extends State<ProjectsPage> {
             ),
           ],
         ),
-        body: BlocBuilder<ProjectBloc, ProjectState>(
-          builder: (context, state) {
-            if (state is ProjectLoading || state is ProjectInitial) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        body: ResponsiveCenter(
+          child: BlocBuilder<ProjectBloc, ProjectState>(
+            builder: (context, state) {
+              if (state is ProjectLoading || state is ProjectInitial) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (state is ProjectError) {
-              return ErrorView(message: state.message, onRetry: _loadProjects);
-            }
-
-            if (state is ProjectsLoaded) {
-              if (state.projects.isEmpty) {
-                return EmptyView(
-                  icon: Icons.folder_open_rounded,
-                  title: AppStrings.noProjectsTitle,
-                  description: AppStrings.noProjectsDesc,
-                  actionText: AppStrings.newProject,
-                  onAction: () => context.push('/projects/new'),
+              if (state is ProjectError) {
+                return ErrorView(
+                  message: state.message,
+                  onRetry: _loadProjects,
                 );
               }
 
-              return RefreshIndicator(
-                onRefresh: () async => _loadProjects(),
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(AppSpacing.pagePaddingMobile),
-                  itemCount: state.projects.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: AppSpacing.md),
-                  itemBuilder: (context, index) {
-                    final project = state.projects[index];
-                    final isActive = state.activeProject?.id == project.id;
+              if (state is ProjectsLoaded) {
+                if (state.projects.isEmpty) {
+                  return EmptyView(
+                    icon: Icons.folder_open_rounded,
+                    title: AppStrings.noProjectsTitle,
+                    description: AppStrings.noProjectsDesc,
+                    actionText: AppStrings.newProject,
+                    onAction: () => context.push('/projects/new'),
+                  );
+                }
 
-                    return Card(
-                      elevation: isActive ? 1.5 : 0.5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: AppSpacing.borderRadiusCard,
-                        side: BorderSide(
-                          color: isActive
-                              ? AppColors.primary
-                              : context.borderColor,
-                          width: isActive ? 2 : 1,
+                return RefreshIndicator(
+                  onRefresh: () async => _loadProjects(),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(AppSpacing.pagePaddingMobile),
+                    itemCount: state.projects.length,
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: AppSpacing.md),
+                    itemBuilder: (context, index) {
+                      final project = state.projects[index];
+                      final isActive = state.activeProject?.id == project.id;
+
+                      return Card(
+                        elevation: isActive ? 1.5 : 0.5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppSpacing.borderRadiusCard,
+                          side: BorderSide(
+                            color: isActive
+                                ? AppColors.primary
+                                : context.borderColor,
+                            width: isActive ? 2 : 1,
+                          ),
                         ),
-                      ),
-                      child: InkWell(
-                        borderRadius: AppSpacing.borderRadiusCard,
-                        onTap: () {
-                          context.read<ProjectBloc>().add(
-                            ProjectSelectRequested(project.id),
-                          );
-                          context.go('/project/${project.id}/board');
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSpacing.lg),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      project.name,
-                                      style: AppTextStyles.cardTitle.copyWith(
-                                        color: isActive
-                                            ? context.primaryTextColor
-                                            : context.inkColor,
-                                      ),
-                                    ),
-                                  ),
-                                  if (isActive)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 3,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: context.primaryTintColor,
-                                        borderRadius:
-                                            AppSpacing.borderRadiusChip,
-                                      ),
+                        child: InkWell(
+                          borderRadius: AppSpacing.borderRadiusCard,
+                          onTap: () {
+                            context.read<ProjectBloc>().add(
+                              ProjectSelectRequested(project.id),
+                            );
+                            context.go('/project/${project.id}/board');
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.lg),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
                                       child: Text(
-                                        'Aktif',
-                                        style: AppTextStyles.caption.copyWith(
-                                          color: context.primaryTextColor,
-                                          fontWeight: FontWeight.w700,
+                                        project.name,
+                                        style: AppTextStyles.cardTitle.copyWith(
+                                          color: isActive
+                                              ? context.primaryTextColor
+                                              : context.inkColor,
                                         ),
                                       ),
                                     ),
-                                ],
-                              ),
-                              if (project.description.isNotEmpty) ...[
-                                const SizedBox(height: AppSpacing.xs),
-                                Text(
-                                  project.description,
-                                  style: AppTextStyles.bodyMuted,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                    if (isActive)
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 3,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: context.primaryTintColor,
+                                          borderRadius:
+                                              AppSpacing.borderRadiusChip,
+                                        ),
+                                        child: Text(
+                                          'Aktif',
+                                          style: AppTextStyles.caption.copyWith(
+                                            color: context.primaryTextColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
-                              ],
-                              const SizedBox(height: AppSpacing.md),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.vpn_key_outlined,
-                                    size: 14,
-                                    color: context.inkMutedColor,
-                                  ),
-                                  const SizedBox(width: 4),
+                                if (project.description.isNotEmpty) ...[
+                                  const SizedBox(height: AppSpacing.xs),
                                   Text(
-                                    '${AppStrings.inviteCodeLabel}: ${project.inviteCode}',
-                                    style: AppTextStyles.caption.copyWith(
+                                    project.description,
+                                    style: AppTextStyles.bodyMuted,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                                const SizedBox(height: AppSpacing.md),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.vpn_key_outlined,
+                                      size: 14,
                                       color: context.inkMutedColor,
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 14,
-                                    color: context.inkMutedColor,
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        '${AppStrings.inviteCodeLabel}: ${project.inviteCode}',
+                                        style: AppTextStyles.caption.copyWith(
+                                          color: context.inkMutedColor,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 14,
+                                      color: context.inkMutedColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }
+                      );
+                    },
+                  ),
+                );
+              }
 
-            return const SizedBox.shrink();
-          },
+              return const SizedBox.shrink();
+            },
+          ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: AppColors.primary,

@@ -1,3 +1,8 @@
+// Dosya: lib/core/constants/app_strings.dart
+// Arayüzde görünen tüm Türkçe metinler.
+// Metinler tek yerde durur; değiştirmek veya çeviri eklemek kolaylaşır.
+
+/// Sabit metin deposu; örneği oluşturulmaz, alanlara AppStrings.x ile erişilir.
 class AppStrings {
   const AppStrings._();
 
@@ -83,7 +88,9 @@ class AppStrings {
   static const String deleteTask = 'Görevi Sil';
   static const String deleteTaskConfirmTitle = 'Görevi Sil';
   static const String deleteTaskConfirmMessage =
-      'Bu görevi silmek istediğine emin misin? Bu işlem geri alınamaz.';
+      'Bu görevi silmek istediğine emin misin? Sildikten sonra birkaç saniye içinde geri alabilirsin.';
+  static const String taskDeleted = 'Görev silindi';
+  static const String undo = 'Geri al';
 
   // My Tasks
   static const String myTasksTitle = 'Bana Atananlar';

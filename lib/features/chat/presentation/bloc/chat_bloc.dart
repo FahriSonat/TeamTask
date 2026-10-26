@@ -1,9 +1,13 @@
+// Dosya: lib/features/chat/presentation/bloc/chat_bloc.dart
+// Proje sohbeti durumu.
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/repositories/chat_repository.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 
+/// Mesaj listesini yükler ve yeni mesajları ekler.
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository chatRepository;
 
@@ -12,6 +16,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatMessageSent>(_onChatMessageSent);
   }
 
+  /// Projenin mesajlarını yükler.
   Future<void> _onChatMessagesLoadRequested(
     ChatMessagesLoadRequested event,
     Emitter<ChatState> emit,
@@ -24,6 +29,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
   }
 
+  /// Mesajı kaydeder ve listenin sonuna ekler.
   Future<void> _onChatMessageSent(
     ChatMessageSent event,
     Emitter<ChatState> emit,

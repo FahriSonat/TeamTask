@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/pages/board_page.dart
+// Kanban panosu: ilerleme çubuğu, üç kolon, proje değiştirici ve alt menü.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +22,7 @@ import '../bloc/task_event.dart';
 import '../bloc/task_state.dart';
 import '../widgets/kanban_column.dart';
 
+/// Seçili projenin panosu.
 class BoardPage extends StatefulWidget {
   final String projectId;
   const BoardPage({super.key, required this.projectId});
@@ -34,6 +38,7 @@ class _BoardPageState extends State<BoardPage> {
     _loadData();
   }
 
+  /// Görevleri ve proje üyelerini yükler.
   void _loadData() {
     context.read<TaskBloc>().add(TasksLoadRequested(widget.projectId));
     context.read<ProjectBloc>().add(
@@ -41,6 +46,7 @@ class _BoardPageState extends State<BoardPage> {
     );
   }
 
+  /// Başlığa dokununca alttan proje listesi açılır.
   void _showProjectSwitcher(BuildContext context, ProjectsLoaded projectState) {
     showModalBottomSheet(
       context: context,
@@ -116,10 +122,16 @@ class _BoardPageState extends State<BoardPage> {
     );
   }
 
+  /// Üst bar: sohbet, tema, projeler. Gövde: ilerleme + yatay kaydırılan kolonlar.
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final columnWidth = screenWidth >= 600 ? 320.0 : (screenWidth - 72.0);
+    // Telefonda bir sonraki kolon kenardan görünür (kaydırılabildiği belli olsun);
+    // geniş ekranda üç kolon yan yana ekranı doldurur.
+    // 52 = liste yatay iç boşluğu (2 x 8) + kolon kenar boşlukları (3 x 12).
+    final columnWidth = screenWidth >= 1012
+        ? (screenWidth - 52.0) / 3
+        : (screenWidth >= 600 ? 320.0 : (screenWidth - 72.0));
 
     return Scaffold(
       appBar: AppBar(
@@ -346,6 +358,7 @@ class _BoardPageState extends State<BoardPage> {
           );
         },
       ),
+      // Alt menü: Pano / Sohbet / Görevlerim / Proje.
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         elevation: 2,

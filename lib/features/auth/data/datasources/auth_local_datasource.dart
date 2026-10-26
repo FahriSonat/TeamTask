@@ -1,9 +1,13 @@
+// Dosya: lib/features/auth/data/datasources/auth_local_datasource.dart
+// Kullanıcı ve oturum bilgisinin Hive'dan okunup yazılması.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_box_names.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/user_model.dart';
 
+/// Kullanıcı kutusu ve oturum kutusu işlemleri sözleşmesi.
 abstract interface class AuthLocalDataSource {
   Future<UserModel?> getUserByEmail(String email);
   Future<UserModel?> getUserById(String id);
@@ -12,12 +16,14 @@ abstract interface class AuthLocalDataSource {
   Future<void> setCurrentUserId(String? userId);
 }
 
+/// Hive tabanlı gerçekleme; hatalar CacheException'a çevrilir.
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final Box<UserModel> userBox;
   final Box sessionBox;
 
   AuthLocalDataSourceImpl({required this.userBox, required this.sessionBox});
 
+  /// E-postayı büyük/küçük harf duyarsız arar.
   @override
   Future<UserModel?> getUserByEmail(String email) async {
     try {
@@ -33,6 +39,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     }
   }
 
+  /// ID ile kullanıcı getirir.
   @override
   Future<UserModel?> getUserById(String id) async {
     try {
@@ -42,6 +49,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     }
   }
 
+  /// Kullanıcıyı kaydeder / günceller.
   @override
   Future<void> saveUser(UserModel user) async {
     try {
@@ -51,6 +59,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     }
   }
 
+  /// Oturumdaki kullanıcının ID'si.
   @override
   Future<String?> getCurrentUserId() async {
     try {
@@ -60,6 +69,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     }
   }
 
+  /// null verilirse oturum silinir (çıkış).
   @override
   Future<void> setCurrentUserId(String? userId) async {
     try {

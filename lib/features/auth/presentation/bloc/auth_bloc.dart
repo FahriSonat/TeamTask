@@ -1,9 +1,13 @@
+// Dosya: lib/features/auth/presentation/bloc/auth_bloc.dart
+// Oturum durumunu yöneten Bloc. Router bu Bloc'u dinleyerek yönlendirir.
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
+/// Olaylar: kontrol, giriş, kayıt, çıkış. Durumlar: auth_state.dart.
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
@@ -14,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
   }
 
+  /// Açılışta kayıtlı oturum var mı bakar.
   Future<void> _onAuthCheckRequested(
     AuthCheckRequested event,
     Emitter<AuthState> emit,
@@ -34,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  /// Giriş dener; başarılıysa Authenticated, değilse AuthError.
   Future<void> _onAuthLoginRequested(
     AuthLoginRequested event,
     Emitter<AuthState> emit,
@@ -49,6 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  /// Kayıt olur ve doğrudan oturum açar.
   Future<void> _onAuthRegisterRequested(
     AuthRegisterRequested event,
     Emitter<AuthState> emit,
@@ -65,6 +72,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  /// Çıkış yapar.
   Future<void> _onAuthLogoutRequested(
     AuthLogoutRequested event,
     Emitter<AuthState> emit,

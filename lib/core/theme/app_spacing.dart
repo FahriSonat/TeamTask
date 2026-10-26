@@ -1,5 +1,9 @@
+// Dosya: lib/core/theme/app_spacing.dart
+// Boşluk, köşe yarıçapı ve dokunma hedefi ölçüleri (tasarım sistemi).
+
 import 'package:flutter/material.dart';
 
+/// 4-8-12-16-20-24-32 ölçeğinde boşluklar ve hazır BorderRadius değerleri.
 class AppSpacing {
   const AppSpacing._();
 
@@ -21,6 +25,7 @@ class AppSpacing {
   static const double radiusButton = 14.0;
   static const double radiusSheet = 24.0;
 
+  /// Erişilebilirlik için en küçük dokunma alanı.
   static const double minTouchTarget = 44.0;
 
   static const BorderRadius borderRadiusChip = BorderRadius.all(

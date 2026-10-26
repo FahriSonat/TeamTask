@@ -1,3 +1,6 @@
+// Dosya: lib/shared/widgets/priority_badge.dart
+// Öncelik rozeti (Düşük / Orta / Acil).
+
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_strings.dart';
@@ -6,11 +9,13 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/theme_context_extension.dart';
 import '../../features/tasks/domain/enums/task_priority.dart';
 
+/// Önceliğe göre renk, ikon ve metin.
 class PriorityBadge extends StatelessWidget {
   final TaskPriority priority;
 
   const PriorityBadge({super.key, required this.priority});
 
+  /// Renkler açık/koyu temaya göre seçilir.
   @override
   Widget build(BuildContext context) {
     final (bg, fg, text, icon) = switch (priority) {

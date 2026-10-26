@@ -1,8 +1,12 @@
+// Dosya: lib/features/tasks/domain/entities/task.dart
+// Görev varlığı ve görev kuralları (kod, gecikme).
+
 import 'package:equatable/equatable.dart';
 
 import '../enums/task_priority.dart';
 import '../enums/task_status.dart';
 
+/// Bir Kanban görevi.
 class Task extends Equatable {
   final String id;
   final String projectId;
@@ -32,8 +36,10 @@ class Task extends Equatable {
     required this.updatedAt,
   });
 
+  /// Ekranda görünen kısa kod: TT-1, TT-2 ...
   String get code => 'TT-$number';
 
+  /// Tamamlanmamış ve teslim günü geçmişse gecikmiştir.
   bool get isOverdue {
     if (status == TaskStatus.done || dueDate == null) return false;
     final now = DateTime.now();
@@ -42,6 +48,7 @@ class Task extends Equatable {
     return due.isBefore(today);
   }
 
+  /// clearAssignee / clearDueDate ile alanlar bilerek boşaltılabilir.
   Task copyWith({
     String? id,
     String? projectId,

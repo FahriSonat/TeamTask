@@ -1,3 +1,6 @@
+// Dosya: lib/features/chat/data/repositories/chat_repository_impl.dart
+// ChatRepository'nin yerel gerçeklemesi.
+
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/errors/failures.dart';
@@ -7,6 +10,7 @@ import '../../domain/repositories/chat_repository.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../models/chat_message_model.dart';
 
+/// Mesaj iş kuralları.
 class ChatRepositoryImpl implements ChatRepository {
   final ChatLocalDataSource localDataSource;
   final Uuid _uuid;
@@ -14,6 +18,7 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl({required this.localDataSource, Uuid? uuid})
     : _uuid = uuid ?? const Uuid();
 
+  /// Projenin mesajları.
   @override
   Future<Result<List<ChatMessage>>> getMessages(String projectId) async {
     try {
@@ -24,6 +29,7 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
+  /// Boş mesajı reddeder; ID ve zaman damgası verip kaydeder.
   @override
   Future<Result<ChatMessage>> sendMessage({
     required String projectId,

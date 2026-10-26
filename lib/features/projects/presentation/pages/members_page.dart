@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/presentation/pages/members_page.dart
+// Proje bilgisi, davet kodu kopyalama ve ekip üyeleri ekranı.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +19,9 @@ import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/project_bloc.dart';
 import '../bloc/project_event.dart';
 import '../bloc/project_state.dart';
+import '../../../../shared/widgets/responsive_center.dart';
 
+/// Projenin ekip ekranı.
 class MembersPage extends StatefulWidget {
   final String projectId;
   const MembersPage({super.key, required this.projectId});
@@ -26,6 +31,7 @@ class MembersPage extends StatefulWidget {
 }
 
 class _MembersPageState extends State<MembersPage> {
+  /// Projeler yüklenmemişse yükler, ardından üyeleri getirir.
   @override
   void initState() {
     super.initState();
@@ -37,6 +43,7 @@ class _MembersPageState extends State<MembersPage> {
     pBloc.add(ProjectMembersLoadRequested(widget.projectId));
   }
 
+  /// Alttan açılan sayfada ad + e-posta ile demo üye ekleme.
   void _showAddMemberDialog(BuildContext context) {
     final nameCtrl = TextEditingController();
     final emailCtrl = TextEditingController();
@@ -105,173 +112,183 @@ class _MembersPageState extends State<MembersPage> {
     );
   }
 
+  /// Proje kartı, davet kodu ve üye listesi (sahip "Yönetici" etiketiyle).
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.membersTitle)),
-      body: BlocBuilder<ProjectBloc, ProjectState>(
-        builder: (context, state) {
-          if (state is! ProjectsLoaded) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: ResponsiveCenter(
+        child: BlocBuilder<ProjectBloc, ProjectState>(
+          builder: (context, state) {
+            if (state is! ProjectsLoaded) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          final project = state.projects.firstWhere(
-            (p) => p.id == widget.projectId,
-            orElse: () => state.activeProject ?? state.projects.first,
-          );
+            final project = state.projects.firstWhere(
+              (p) => p.id == widget.projectId,
+              orElse: () => state.activeProject ?? state.projects.first,
+            );
 
-          final members = state.members;
+            final members = state.members;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.pagePaddingMobile),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Proje Bilgi Kartı
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(project.name, style: AppTextStyles.title),
-                        if (project.description.isNotEmpty) ...[
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            project.description,
-                            style: AppTextStyles.bodyMuted,
-                          ),
-                        ],
-                        const SizedBox(height: AppSpacing.lg),
-                        const Divider(),
-                        const SizedBox(height: AppSpacing.md),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppStrings.inviteCodeLabel,
-                                    style: AppTextStyles.caption,
-                                  ),
-                                  Text(
-                                    project.inviteCode,
-                                    style: AppTextStyles.headline.copyWith(
-                                      color: AppColors.primary,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                Clipboard.setData(
-                                  ClipboardData(text: project.inviteCode),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(AppStrings.inviteCodeCopied),
-                                    backgroundColor: AppColors.primary,
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.copy_rounded, size: 16),
-                              label: const Text(AppStrings.copyInviteCode),
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(
-                                  0,
-                                  AppSpacing.minTouchTarget,
-                                ),
-                              ),
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.pagePaddingMobile),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Proje Bilgi Kartı
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(project.name, style: AppTextStyles.title),
+                          if (project.description.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              project.description,
+                              style: AppTextStyles.bodyMuted,
                             ),
                           ],
-                        ),
-                      ],
+                          const SizedBox(height: AppSpacing.lg),
+                          const Divider(),
+                          const SizedBox(height: AppSpacing.md),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppStrings.inviteCodeLabel,
+                                      style: AppTextStyles.caption,
+                                    ),
+                                    Text(
+                                      project.inviteCode,
+                                      style: AppTextStyles.headline.copyWith(
+                                        color: AppColors.primary,
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: project.inviteCode),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        AppStrings.inviteCodeCopied,
+                                      ),
+                                      backgroundColor: AppColors.primary,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.copy_rounded, size: 16),
+                                label: const Text(AppStrings.copyInviteCode),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(
+                                    0,
+                                    AppSpacing.minTouchTarget,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xxl),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${AppStrings.membersTitle} (${members.length})',
-                      style: AppTextStyles.sectionTitle,
-                    ),
-                    TextButton.icon(
-                      onPressed: () => _showAddMemberDialog(context),
-                      icon: const Icon(Icons.person_add_outlined, size: 18),
-                      label: const Text(AppStrings.addLocalMember),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: members.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (context, index) {
-                    final member = members[index];
-                    final isOwner = member.id == project.ownerId;
+                  const SizedBox(height: AppSpacing.xxl),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          '${AppStrings.membersTitle} (${members.length})',
+                          style: AppTextStyles.sectionTitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: () => _showAddMemberDialog(context),
+                        icon: const Icon(Icons.person_add_outlined, size: 18),
+                        label: const Text(AppStrings.addLocalMember),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: members.length,
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: AppSpacing.sm),
+                    itemBuilder: (context, index) {
+                      final member = members[index];
+                      final isOwner = member.id == project.ownerId;
 
-                    return Card(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: isOwner
-                              ? AppColors.primary
-                              : context.primaryTintColor,
-                          foregroundColor: isOwner
-                              ? Colors.white
-                              : context.primaryTextColor,
-                          child: Text(
-                            member.name.isNotEmpty
-                                ? member.name[0].toUpperCase()
-                                : '?',
-                            style: const TextStyle(fontWeight: FontWeight.w700),
+                      return Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: isOwner
+                                ? AppColors.primary
+                                : context.primaryTintColor,
+                            foregroundColor: isOwner
+                                ? Colors.white
+                                : context.primaryTextColor,
+                            child: Text(
+                              member.name.isNotEmpty
+                                  ? member.name[0].toUpperCase()
+                                  : '?',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          member.name,
-                          style: AppTextStyles.cardTitle,
-                        ),
-                        subtitle: Text(
-                          member.email,
-                          style: AppTextStyles.caption,
-                        ),
-                        trailing: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
+                          title: Text(
+                            member.name,
+                            style: AppTextStyles.cardTitle,
                           ),
-                          decoration: BoxDecoration(
-                            color: isOwner
-                                ? context.primaryTintColor
-                                : context.dividerColor,
-                            borderRadius: AppSpacing.borderRadiusChip,
+                          subtitle: Text(
+                            member.email,
+                            style: AppTextStyles.caption,
                           ),
-                          child: Text(
-                            isOwner ? 'Yönetici' : 'Üye',
-                            style: AppTextStyles.caption.copyWith(
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
                               color: isOwner
-                                  ? context.primaryTextColor
-                                  : context.inkMutedColor,
-                              fontWeight: FontWeight.w700,
+                                  ? context.primaryTintColor
+                                  : context.dividerColor,
+                              borderRadius: AppSpacing.borderRadiusChip,
+                            ),
+                            child: Text(
+                              isOwner ? 'Yönetici' : 'Üye',
+                              style: AppTextStyles.caption.copyWith(
+                                color: isOwner
+                                    ? context.primaryTextColor
+                                    : context.inkMutedColor,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

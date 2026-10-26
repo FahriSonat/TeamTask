@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/data/datasources/project_local_datasource.dart
+// Proje, üyelik ve aktif proje bilgisinin Hive işlemleri.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_box_names.dart';
@@ -6,6 +9,7 @@ import '../../../auth/data/models/user_model.dart';
 import '../models/membership_model.dart';
 import '../models/project_model.dart';
 
+/// Proje veri kaynağı sözleşmesi.
 abstract interface class ProjectLocalDataSource {
   Future<List<ProjectModel>> getProjectsForUser(String userId);
   Future<ProjectModel?> getProjectById(String id);
@@ -17,6 +21,7 @@ abstract interface class ProjectLocalDataSource {
   Future<void> setActiveProjectId(String? projectId);
 }
 
+/// Hive gerçeklemesi; hatalar CacheException'a çevrilir.
 class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
   final Box<ProjectModel> projectBox;
   final Box<MembershipModel> membershipBox;
@@ -30,6 +35,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     required this.sessionBox,
   });
 
+  /// Kullanıcının üye olduğu projeler, son güncellenen önce.
   @override
   Future<List<ProjectModel>> getProjectsForUser(String userId) async {
     try {
@@ -47,6 +53,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// ID ile proje.
   @override
   Future<ProjectModel?> getProjectById(String id) async {
     try {
@@ -56,6 +63,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// Projeyi kaydeder.
   @override
   Future<void> saveProject(ProjectModel project) async {
     try {
@@ -65,6 +73,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// Projenin tüm üyelikleri.
   @override
   Future<List<MembershipModel>> getMembershipsForProject(
     String projectId,
@@ -78,6 +87,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// Üyeliği kaydeder.
   @override
   Future<void> saveMembership(MembershipModel membership) async {
     try {
@@ -87,6 +97,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// ID listesindeki kullanıcılar.
   @override
   Future<List<UserModel>> getUsersByIds(List<String> userIds) async {
     try {
@@ -97,6 +108,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// Aktif proje ID'si.
   @override
   Future<String?> getActiveProjectId() async {
     try {
@@ -106,6 +118,7 @@ class ProjectLocalDataSourceImpl implements ProjectLocalDataSource {
     }
   }
 
+  /// Aktif projeyi değiştirir (null = temizle).
   @override
   Future<void> setActiveProjectId(String? projectId) async {
     try {
