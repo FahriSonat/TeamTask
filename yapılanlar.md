@@ -597,7 +597,7 @@ flutter test test/responsive_test.dart   # sadece responsive kontrolü
 
 ## 6. Branch ve Commitler
 
-Tüm çalışma `main`'e dokunmadan **`duzeltmeler-ve-iyilestirmeler`** branch'inde, her biri tek bir konuyu içeren commitlere bölündü:
+Tüm çalışma `main`'e dokunmadan **`teamtask-iyilestirmeler`** branch'inde, her biri tek bir konuyu içeren commitlere bölündü:
 
 | # | Commit | İçerik |
 |---|---|---|
@@ -618,7 +618,7 @@ Tüm çalışma `main`'e dokunmadan **`duzeltmeler-ve-iyilestirmeler`** branch'i
 **Sonraki adımlar:**
 
 ```bash
-git push -u origin duzeltmeler-ve-iyilestirmeler   # branch'i GitHub'a gönder
+git push -u origin teamtask-iyilestirmeler   # branch'i GitHub'a gönder
 # GitHub'da "Compare & pull request" ile main'e Pull Request açılır,
 # ekip arkadaşı inceler, onaylanınca main'e birleştirilir.
 ```
