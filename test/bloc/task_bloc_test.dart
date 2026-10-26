@@ -33,6 +33,9 @@ void main() {
     updatedAt: DateTime.utc(2026, 10, 1),
   );
 
+  // mocktail'in any() eşleştiricisi Task tipi için örnek bir değere ihtiyaç duyar.
+  setUpAll(() => registerFallbackValue(testTask));
+
   setUp(() {
     mockTaskRepository = MockTaskRepository();
     taskBloc = TaskBloc(taskRepository: mockTaskRepository);
@@ -93,6 +96,28 @@ void main() {
       seed: () => TasksLoaded(tasks: [testTask]),
       act: (bloc) => bloc.add(const TaskDeleted('t1')),
       expect: () => [const TasksLoaded(tasks: [])],
+    );
+
+    blocTest<TaskBloc, TaskState>(
+      'restores deleted task with the same code on TaskRestored',
+      build: () {
+        when(
+          () => mockTaskRepository.restoreTask(testTask),
+        ).thenAnswer((_) async => Result.success(testTask));
+        when(
+          () => mockTaskRepository.getTasksByProject('p1'),
+        ).thenAnswer((_) async => Result.success([testTask]));
+        return taskBloc;
+      },
+      seed: () => const TasksLoaded(tasks: []),
+      act: (bloc) => bloc.add(TaskRestored(testTask)),
+      expect: () => [
+        TasksLoaded(tasks: [testTask]),
+      ],
+      verify: (_) {
+        verify(() => mockTaskRepository.restoreTask(testTask)).called(1);
+        verifyNever(() => mockTaskRepository.addTask(any()));
+      },
     );
   });
 }

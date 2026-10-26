@@ -13,4 +13,7 @@ abstract interface class TaskRepository {
   Future<Result<Task>> updateTask(Task task);
   Future<Result<void>> deleteTask(String taskId);
   Future<Result<Task>> changeStatus(String taskId, TaskStatus status);
+
+  /// Silinen görevi aynı ID ve TT numarasıyla geri kaydeder (silmeyi geri al).
+  Future<Result<Task>> restoreTask(Task task);
 }

@@ -161,6 +161,17 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Görev olduğu gibi geri yazılır; yeni numara verilmez, böylece TT kodu korunur.
+  @override
+  Future<Result<Task>> restoreTask(Task task) async {
+    try {
+      await localDataSource.saveTask(TaskModel.fromEntity(task));
+      return Result.success(task);
+    } catch (e) {
+      return Result.failure(CacheFailure('Görev geri alınamadı: $e'));
+    }
+  }
+
   /// Sıralama: önce öncelik, sonra yakın teslim tarihi, sonra en yeni.
   void _sortTasks(List<Task> tasks) {
     tasks.sort((a, b) {

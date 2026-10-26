@@ -109,7 +109,30 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     isDestructive: true,
                   );
                   if (confirm && context.mounted) {
-                    context.read<TaskBloc>().add(TaskDeleted(widget.taskId));
+                    // Sayfa kapanacağı için Bloc ve mesaj alanı önceden alınır;
+                    // "Geri al"a basıldığında bu sayfa artık açık olmaz.
+                    final deletedTask = task!;
+                    final taskBloc = context.read<TaskBloc>();
+                    final messenger = ScaffoldMessenger.of(context);
+
+                    taskBloc.add(TaskDeleted(widget.taskId));
+                    messenger
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${deletedTask.code} · ${AppStrings.taskDeleted}',
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          duration: const Duration(seconds: 5),
+                          action: SnackBarAction(
+                            label: AppStrings.undo,
+                            onPressed: () =>
+                                taskBloc.add(TaskRestored(deletedTask)),
+                          ),
+                        ),
+                      );
+
                     if (context.canPop()) {
                       context.pop();
                     } else {

@@ -50,6 +50,15 @@ final class TaskDeleted extends TaskEvent {
   List<Object?> get props => [taskId];
 }
 
+/// Silinen görevi geri getir.
+final class TaskRestored extends TaskEvent {
+  final Task task;
+  const TaskRestored(this.task);
+
+  @override
+  List<Object?> get props => [task];
+}
+
 /// Görevin durumunu (kolonunu) değiştir.
 final class TaskStatusChanged extends TaskEvent {
   final String taskId;

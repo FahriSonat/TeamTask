@@ -18,6 +18,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<TaskUpdated>(_onTaskUpdated);
     on<TaskDeleted>(_onTaskDeleted);
     on<TaskStatusChanged>(_onTaskStatusChanged);
+    on<TaskRestored>(_onTaskRestored);
   }
 
   /// Projenin görevlerini yükler.
@@ -149,6 +150,33 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         );
         emit(TasksLoaded(tasks: oldTasks));
       },
+    );
+  }
+
+  /// Silmeyi geri al: görevi geri kaydeder ve listeyi yeniden yükler,
+  /// böylece görev panodaki eski sırasına döner.
+  Future<void> _onTaskRestored(
+    TaskRestored event,
+    Emitter<TaskState> emit,
+  ) async {
+    final current = state;
+    final prev = current is TasksLoaded ? current.tasks : null;
+
+    final result = await taskRepository.restoreTask(event.task);
+    if (result.isFailure) {
+      emit(
+        TaskError(message: result.failureOrNull!.message, previousTasks: prev),
+      );
+      if (prev != null) emit(TasksLoaded(tasks: prev));
+      return;
+    }
+
+    final tasksResult = await taskRepository.getTasksByProject(
+      event.task.projectId,
+    );
+    tasksResult.when(
+      success: (tasks) => emit(TasksLoaded(tasks: tasks)),
+      failure: (_) => emit(TasksLoaded(tasks: [event.task, ...?prev])),
     );
   }
 }
