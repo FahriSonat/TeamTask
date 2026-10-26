@@ -40,8 +40,9 @@ void main() {
     blocTest<ChatBloc, ChatState>(
       'emits [ChatLoading, ChatLoaded] when messages are loaded successfully',
       build: () {
-        when(() => mockChatRepository.getMessages('p1'))
-            .thenAnswer((_) async => Result.success([testMessage]));
+        when(
+          () => mockChatRepository.getMessages('p1'),
+        ).thenAnswer((_) async => Result.success([testMessage]));
         return chatBloc;
       },
       act: (bloc) => bloc.add(const ChatMessagesLoadRequested('p1')),

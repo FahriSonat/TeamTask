@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -35,9 +36,15 @@ import '../../features/chat/presentation/bloc/chat_bloc.dart';
 
 final sl = GetIt.instance;
 
-Future<void> initInjection() async {
+/// [storagePath] verilirse Hive bu klasörde açılır (testler için);
+/// verilmezse platformun uygulama dokümanları klasörü kullanılır.
+Future<void> initInjection({String? storagePath}) async {
   // 1. Hive başlatma
-  await Hive.initFlutter();
+  if (storagePath != null) {
+    Hive.init(storagePath);
+  } else {
+    await Hive.initFlutter();
+  }
 
   // 2. Adapter registration
   if (!Hive.isAdapterRegistered(UserModelAdapter().typeId)) {
@@ -178,18 +185,25 @@ Future<void> _applySeedIfNeeded({
       }
     }
 
-    // Task sayacı ayarla
+    // Görev sayacı: son kullanılan numara saklanır, getNextTaskNumber bir
+    // artırarak verir (seed TT-1..TT-4 ise ilk yeni görev TT-5 olur).
     if (projectsList.isNotEmpty) {
       final firstProjectId = projectsList.first['id'] as String;
+      final lastNumber = tasksList.fold<int>(
+        0,
+        (max, t) => (t['number'] as int) > max ? t['number'] as int : max,
+      );
       await sessionBox.put(
         SessionKeys.nextTaskNumber(firstProjectId),
-        tasksList.length + 1,
+        lastNumber,
       );
       await sessionBox.put(SessionKeys.activeProjectId, firstProjectId);
     }
 
     await sessionBox.put(SessionKeys.seedApplied, true);
-  } catch (e) {
-    // Seed yükleme hatası durumunda çökertme
+  } catch (e, st) {
+    // Seed yükleme hatası durumunda çökertme, ama hatayı görünür kıl
+    debugPrint('Seed verisi yüklenemedi: $e');
+    debugPrintStack(stackTrace: st);
   }
 }

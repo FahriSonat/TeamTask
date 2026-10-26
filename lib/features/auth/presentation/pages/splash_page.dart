@@ -74,9 +74,7 @@ class _SplashPageState extends State<SplashPage> {
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     AppStrings.appTagline,
-                    style: AppTextStyles.body.copyWith(
-                      color: Colors.white,
-                    ),
+                    style: AppTextStyles.body.copyWith(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.xxxl * 1.5),
@@ -85,9 +83,7 @@ class _SplashPageState extends State<SplashPage> {
                     height: 24,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white,
-                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),

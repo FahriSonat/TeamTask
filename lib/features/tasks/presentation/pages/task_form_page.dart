@@ -21,6 +21,7 @@ import '../bloc/task_bloc.dart';
 import '../bloc/task_event.dart';
 import '../bloc/task_state.dart';
 import '../cubit/task_form_cubit.dart';
+import '../../../../shared/widgets/responsive_center.dart';
 
 class TaskFormPage extends StatelessWidget {
   final String projectId;
@@ -105,6 +106,15 @@ class _TaskFormViewState extends State<_TaskFormView> {
     }
   }
 
+  /// Sayfa doğrudan bağlantıyla açıldıysa geri yığını boş olabilir.
+  void _close() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/project/${widget.projectId}/board');
+    }
+  }
+
   void _submit() {
     final cubit = context.read<TaskFormCubit>();
     if (!cubit.validate()) return;
@@ -146,7 +156,7 @@ class _TaskFormViewState extends State<_TaskFormView> {
       context.read<TaskBloc>().add(TaskAdded(newTask));
     }
 
-    context.pop();
+    _close();
   }
 
   @override
@@ -161,7 +171,7 @@ class _TaskFormViewState extends State<_TaskFormView> {
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
           tooltip: AppStrings.cancel,
-          onPressed: () => context.pop(),
+          onPressed: _close,
         ),
         actions: [
           TextButton(
@@ -173,203 +183,219 @@ class _TaskFormViewState extends State<_TaskFormView> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: BlocBuilder<TaskFormCubit, TaskFormState>(
-          builder: (context, formState) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.formPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Durum Seçici
-                  const Text(
-                    AppStrings.statusLabel,
-                    style: AppTextStyles.label,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  SegmentedButton<TaskStatus>(
-                    segments: const [
-                      ButtonSegment(
-                        value: TaskStatus.todo,
-                        label: Text(
-                          AppStrings.statusTodo,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      ButtonSegment(
-                        value: TaskStatus.inProgress,
-                        label: Text(
-                          AppStrings.statusInProgress,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      ButtonSegment(
-                        value: TaskStatus.done,
-                        label: Text(
-                          AppStrings.statusDone,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ],
-                    selected: {formState.status},
-                    onSelectionChanged: (set) =>
-                        context.read<TaskFormCubit>().statusChanged(set.first),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  // Başlık Alanı
-                  AppTextField(
-                    label: AppStrings.taskTitleLabel,
-                    hint: AppStrings.taskTitleHint,
-                    controller: _titleController,
-                    errorText: formState.titleError,
-                    maxLength: 80,
-                    onChanged: (val) =>
-                        context.read<TaskFormCubit>().titleChanged(val),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  // Açıklama Alanı
-                  AppTextField(
-                    label: AppStrings.taskDescLabel,
-                    hint: AppStrings.taskDescHint,
-                    controller: _descController,
-                    errorText: formState.descError,
-                    maxLines: 4,
-                    maxLength: 500,
-                    onChanged: (val) =>
-                        context.read<TaskFormCubit>().descriptionChanged(val),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  // Öncelik Seçici
-                  const Text(
-                    AppStrings.priorityLabel,
-                    style: AppTextStyles.label,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  SegmentedButton<TaskPriority>(
-                    segments: const [
-                      ButtonSegment(
-                        value: TaskPriority.low,
-                        label: Text(
-                          AppStrings.priorityLow,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      ButtonSegment(
-                        value: TaskPriority.medium,
-                        label: Text(
-                          AppStrings.priorityMedium,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      ButtonSegment(
-                        value: TaskPriority.urgent,
-                        label: Text(
-                          AppStrings.priorityUrgent,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ],
-                    selected: {formState.priority},
-                    onSelectionChanged: (set) => context
-                        .read<TaskFormCubit>()
-                        .priorityChanged(set.first),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  // Atanan Kişi Seçimi
-                  const Text(
-                    AppStrings.assigneeLabel,
-                    style: AppTextStyles.label,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  DropdownButtonFormField<String?>(
-                    initialValue: formState.assigneeId,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.person_outline_rounded,
-                        color: context.inkMutedColor,
-                      ),
+      body: ResponsiveCenter(
+        child: SafeArea(
+          child: BlocBuilder<TaskFormCubit, TaskFormState>(
+            builder: (context, formState) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.formPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Durum Seçici
+                    const Text(
+                      AppStrings.statusLabel,
+                      style: AppTextStyles.label,
                     ),
-                    items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text(AppStrings.unassigned),
-                      ),
-                      ...members.map((m) {
-                        return DropdownMenuItem<String?>(
-                          value: m.id,
-                          child: Text(m.name),
-                        );
-                      }),
-                    ],
-                    onChanged: (val) =>
-                        context.read<TaskFormCubit>().assigneeChanged(val),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  // Teslim Tarihi
-                  const Text(
-                    AppStrings.dueDateLabel,
-                    style: AppTextStyles.label,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  InkWell(
-                    onTap: () => _pickDueDate(context, formState.dueDate),
-                    borderRadius: AppSpacing.borderRadiusField,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg,
-                        vertical: AppSpacing.md,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.fieldBgColor,
-                        borderRadius: AppSpacing.borderRadiusField,
-                        border: Border.all(color: context.borderColor),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today_rounded,
-                            color: context.inkMutedColor,
-                            size: 20,
+                    const SizedBox(height: AppSpacing.xs),
+                    SegmentedButton<TaskStatus>(
+                      segments: const [
+                        ButtonSegment(
+                          value: TaskStatus.todo,
+                          label: Text(
+                            AppStrings.statusTodo,
+                            style: TextStyle(fontSize: 12),
                           ),
-                          const SizedBox(width: AppSpacing.md),
-                          Text(
-                            formState.dueDate != null
-                                ? DateFormatter.formatFullDate(
-                                    formState.dueDate,
-                                  )
-                                : AppStrings.selectDueDate,
-                            style: AppTextStyles.body.copyWith(
-                              color: formState.dueDate != null
-                                  ? context.inkColor
-                                  : context.inkMutedColor,
+                        ),
+                        ButtonSegment(
+                          value: TaskStatus.inProgress,
+                          label: Text(
+                            AppStrings.statusInProgress,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        ButtonSegment(
+                          value: TaskStatus.done,
+                          label: Text(
+                            AppStrings.statusDone,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                      selected: {formState.status},
+                      onSelectionChanged: (set) => context
+                          .read<TaskFormCubit>()
+                          .statusChanged(set.first),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    // Başlık Alanı
+                    AppTextField(
+                      label: AppStrings.taskTitleLabel,
+                      hint: AppStrings.taskTitleHint,
+                      controller: _titleController,
+                      errorText: formState.titleError,
+                      maxLength: 80,
+                      onChanged: (val) =>
+                          context.read<TaskFormCubit>().titleChanged(val),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    // Açıklama Alanı
+                    AppTextField(
+                      label: AppStrings.taskDescLabel,
+                      hint: AppStrings.taskDescHint,
+                      controller: _descController,
+                      errorText: formState.descError,
+                      maxLines: 4,
+                      maxLength: 500,
+                      onChanged: (val) =>
+                          context.read<TaskFormCubit>().descriptionChanged(val),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    // Öncelik Seçici
+                    const Text(
+                      AppStrings.priorityLabel,
+                      style: AppTextStyles.label,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    SegmentedButton<TaskPriority>(
+                      showSelectedIcon: false,
+                      expandedInsets: EdgeInsets.zero,
+                      segments: const [
+                        ButtonSegment(
+                          value: TaskPriority.low,
+                          label: Text(
+                            AppStrings.priorityLow,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        ButtonSegment(
+                          value: TaskPriority.medium,
+                          label: Text(
+                            AppStrings.priorityMedium,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        ButtonSegment(
+                          value: TaskPriority.urgent,
+                          label: Text(
+                            AppStrings.priorityUrgent,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                      selected: {formState.priority},
+                      onSelectionChanged: (set) => context
+                          .read<TaskFormCubit>()
+                          .priorityChanged(set.first),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    // Atanan Kişi Seçimi
+                    const Text(
+                      AppStrings.assigneeLabel,
+                      style: AppTextStyles.label,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    DropdownButtonFormField<String?>(
+                      // Üyeler sonradan yüklenirse alan yeniden kurulsun.
+                      key: ValueKey(members.length),
+                      initialValue:
+                          members.any((m) => m.id == formState.assigneeId)
+                          ? formState.assigneeId
+                          : null,
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.person_outline_rounded,
+                          color: context.inkMutedColor,
+                        ),
+                      ),
+                      items: [
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text(AppStrings.unassigned),
+                        ),
+                        ...members.map((m) {
+                          return DropdownMenuItem<String?>(
+                            value: m.id,
+                            child: Text(
+                              m.name,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const Spacer(),
-                          if (formState.dueDate != null)
-                            IconButton(
-                              icon: Icon(
-                                Icons.clear_rounded,
-                                size: 18,
-                                color: context.inkMutedColor,
+                          );
+                        }),
+                      ],
+                      onChanged: (val) =>
+                          context.read<TaskFormCubit>().assigneeChanged(val),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    // Teslim Tarihi
+                    const Text(
+                      AppStrings.dueDateLabel,
+                      style: AppTextStyles.label,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    InkWell(
+                      onTap: () => _pickDueDate(context, formState.dueDate),
+                      borderRadius: AppSpacing.borderRadiusField,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                          vertical: AppSpacing.md,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.fieldBgColor,
+                          borderRadius: AppSpacing.borderRadiusField,
+                          border: Border.all(color: context.borderColor),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today_rounded,
+                              color: context.inkMutedColor,
+                              size: 20,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Expanded(
+                              child: Text(
+                                formState.dueDate != null
+                                    ? DateFormatter.formatFullDate(
+                                        formState.dueDate,
+                                      )
+                                    : AppStrings.selectDueDate,
+                                style: AppTextStyles.body.copyWith(
+                                  color: formState.dueDate != null
+                                      ? context.inkColor
+                                      : context.inkMutedColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              tooltip: AppStrings.clearDate,
-                              onPressed: () => context
-                                  .read<TaskFormCubit>()
-                                  .dueDateChanged(null),
                             ),
-                        ],
+                            if (formState.dueDate != null)
+                              IconButton(
+                                icon: Icon(
+                                  Icons.clear_rounded,
+                                  size: 18,
+                                  color: context.inkMutedColor,
+                                ),
+                                tooltip: AppStrings.clearDate,
+                                onPressed: () => context
+                                    .read<TaskFormCubit>()
+                                    .dueDateChanged(null),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.xxxl),
-                  AppButton(
-                    text: isEdit ? AppStrings.save : AppStrings.addTask,
-                    onPressed: _submit,
-                  ),
-                ],
-              ),
-            );
-          },
+                    const SizedBox(height: AppSpacing.xxxl),
+                    AppButton(
+                      text: isEdit ? AppStrings.save : AppStrings.addTask,
+                      onPressed: _submit,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

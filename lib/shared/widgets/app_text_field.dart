@@ -46,10 +46,13 @@ class AppTextField extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: AppTextStyles.label.copyWith(
-                color: context.isDark ? Colors.white : context.inkColor,
+            Flexible(
+              child: Text(
+                label,
+                style: AppTextStyles.label.copyWith(
+                  color: context.isDark ? Colors.white : context.inkColor,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             if (maxLength != null && controller != null)

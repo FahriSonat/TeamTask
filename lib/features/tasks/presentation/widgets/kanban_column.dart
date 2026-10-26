@@ -75,7 +75,13 @@ class KanbanColumn extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Text(title, style: AppTextStyles.cardTitle),
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: AppTextStyles.cardTitle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     const SizedBox(width: AppSpacing.sm),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -135,11 +141,16 @@ class KanbanColumn extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            childWhenDragging: Opacity(
-                              opacity: 0.3,
-                              child: TaskCard(
-                                task: task,
-                                assigneeName: assigneeName,
+                            childWhenDragging: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: AppSpacing.sm,
+                              ),
+                              child: Opacity(
+                                opacity: 0.3,
+                                child: TaskCard(
+                                  task: task,
+                                  assigneeName: assigneeName,
+                                ),
                               ),
                             ),
                             child: Padding(

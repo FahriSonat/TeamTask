@@ -46,8 +46,9 @@ void main() {
     blocTest<TaskBloc, TaskState>(
       'emits [TaskLoading, TasksLoaded] when tasks are loaded successfully',
       build: () {
-        when(() => mockTaskRepository.getTasksByProject('p1'))
-            .thenAnswer((_) async => Result.success([testTask]));
+        when(
+          () => mockTaskRepository.getTasksByProject('p1'),
+        ).thenAnswer((_) async => Result.success([testTask]));
         return taskBloc;
       },
       act: (bloc) => bloc.add(const TasksLoadRequested('p1')),
@@ -80,8 +81,9 @@ void main() {
     blocTest<TaskBloc, TaskState>(
       'removes task on TaskDeleted',
       build: () {
-        when(() => mockTaskRepository.deleteTask('t1'))
-            .thenAnswer((_) async => const Result.success(null));
+        when(
+          () => mockTaskRepository.deleteTask('t1'),
+        ).thenAnswer((_) async => const Result.success(null));
         return taskBloc;
       },
       seed: () => TasksLoaded(tasks: [testTask]),

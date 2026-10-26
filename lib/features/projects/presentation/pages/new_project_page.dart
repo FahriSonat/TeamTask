@@ -15,6 +15,7 @@ import '../bloc/project_bloc.dart';
 import '../bloc/project_event.dart';
 import '../bloc/project_state.dart';
 import '../cubit/project_form_cubit.dart';
+import '../../../../shared/widgets/responsive_center.dart';
 
 class NewProjectPage extends StatelessWidget {
   const NewProjectPage({super.key});
@@ -39,6 +40,10 @@ class _NewProjectViewState extends State<_NewProjectView> {
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
 
+  /// Bloc başka sebeplerle (ör. üye listesi) durum yayınlayabilir;
+  /// yalnızca kaydet'e basıldıktan sonraki durumlara tepki verilir.
+  bool _submitted = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -54,6 +59,7 @@ class _NewProjectViewState extends State<_NewProjectView> {
     if (authState is! Authenticated) return;
 
     final state = formCubit.state;
+    _submitted = true;
     context.read<ProjectBloc>().add(
       ProjectCreateRequested(
         name: state.name,
@@ -66,7 +72,9 @@ class _NewProjectViewState extends State<_NewProjectView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProjectBloc, ProjectState>(
+      listenWhen: (_, _) => _submitted,
       listener: (context, state) {
+        _submitted = false;
         if (state is ProjectsLoaded && state.activeProject != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -90,71 +98,75 @@ class _NewProjectViewState extends State<_NewProjectView> {
       },
       child: Scaffold(
         appBar: AppBar(title: const Text(AppStrings.createProject)),
-        body: SafeArea(
-          child: BlocBuilder<ProjectFormCubit, ProjectFormState>(
-            builder: (context, formState) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(AppSpacing.formPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    AppTextField(
-                      label: AppStrings.projectNameLabel,
-                      hint: AppStrings.projectNameHint,
-                      controller: _nameController,
-                      errorText: formState.nameError,
-                      maxLength: 60,
-                      onChanged: (val) =>
-                          context.read<ProjectFormCubit>().nameChanged(val),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    AppTextField(
-                      label: AppStrings.projectDescLabel,
-                      hint: AppStrings.projectDescHint,
-                      controller: _descController,
-                      maxLines: 4,
-                      maxLength: 300,
-                      onChanged: (val) => context
-                          .read<ProjectFormCubit>()
-                          .descriptionChanged(val),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: context.primaryTintColor.withValues(alpha: 0.4),
-                        borderRadius: AppSpacing.borderRadiusCard,
-                        border: Border.all(color: context.primaryTintColor),
+        body: ResponsiveCenter(
+          child: SafeArea(
+            child: BlocBuilder<ProjectFormCubit, ProjectFormState>(
+              builder: (context, formState) {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppSpacing.formPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      AppTextField(
+                        label: AppStrings.projectNameLabel,
+                        hint: AppStrings.projectNameHint,
+                        controller: _nameController,
+                        errorText: formState.nameError,
+                        maxLength: 60,
+                        onChanged: (val) =>
+                            context.read<ProjectFormCubit>().nameChanged(val),
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.info_outline_rounded,
-                            color: AppColors.primary,
-                            size: 20,
+                      const SizedBox(height: AppSpacing.lg),
+                      AppTextField(
+                        label: AppStrings.projectDescLabel,
+                        hint: AppStrings.projectDescHint,
+                        controller: _descController,
+                        maxLines: 4,
+                        maxLength: 300,
+                        onChanged: (val) => context
+                            .read<ProjectFormCubit>()
+                            .descriptionChanged(val),
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          color: context.primaryTintColor.withValues(
+                            alpha: 0.4,
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Expanded(
-                            child: Text(
-                              AppStrings.localDemoNotice,
-                              style: AppTextStyles.caption.copyWith(
-                                color: context.primaryTextColor,
+                          borderRadius: AppSpacing.borderRadiusCard,
+                          border: Border.all(color: context.primaryTintColor),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.info_outline_rounded,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Text(
+                                AppStrings.localDemoNotice,
+                                style: AppTextStyles.caption.copyWith(
+                                  color: context.primaryTextColor,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.xxxl),
-                    AppButton(
-                      text: AppStrings.createProject,
-                      onPressed: _submit,
-                    ),
-                  ],
-                ),
-              );
-            },
+                      const SizedBox(height: AppSpacing.xxxl),
+                      AppButton(
+                        text: AppStrings.createProject,
+                        onPressed: _submit,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

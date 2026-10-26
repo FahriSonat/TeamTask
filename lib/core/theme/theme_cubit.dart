@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
+import '../constants/hive_box_names.dart';
+
 class ThemeCubit extends Cubit<ThemeMode> {
   final Box sessionBox;
-  static const String _key = 'user_theme_mode';
+  static const String _key = SessionKeys.themeMode;
 
   ThemeCubit({required this.sessionBox}) : super(_getInitialMode(sessionBox));
 
