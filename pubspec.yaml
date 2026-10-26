@@ -1,5 +1,5 @@
 name: team_task
-description: "A new Flutter project."
+description: "TeamTask — mobil kanban ve ekip görev yönetimi uygulaması."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.13.5
+  sdk: ">=3.10.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -39,12 +39,12 @@ dependencies:
   flutter_bloc: ^9.1.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  get_it: ^9.3.0
-  go_router: ^18.1.1
+  get_it: ">=8.0.0 <10.0.0"
+  go_router: ">=17.0.0 <19.0.0"
   equatable: ^3.0.0
   uuid: ^4.6.0
   crypto: ^3.0.7
-  intl: ^0.20.3
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
