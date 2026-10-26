@@ -1,3 +1,6 @@
+// Dosya: lib/shared/widgets/responsive_center.dart
+// Tablet ve geniş ekranlarda içeriği sınırlı genişlikte ortalayan sarmalayıcı.
+
 import 'package:flutter/material.dart';
 
 /// Tablet ve yatay ekranlarda içeriğin tüm genişliğe yayılmasını engeller;
@@ -8,6 +11,7 @@ class ResponsiveCenter extends StatelessWidget {
 
   const ResponsiveCenter({super.key, required this.child, this.maxWidth = 640});
 
+  /// Ekran dar ise içerik tam genişlikte kalır, genişse en fazla maxWidth olur.
   @override
   Widget build(BuildContext context) {
     return Center(

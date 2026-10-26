@@ -1,5 +1,9 @@
+// Dosya: lib/core/theme/app_colors.dart
+// Uygulamanın renk paleti (açık ve koyu tema).
+
 import 'package:flutter/material.dart';
 
+/// Tüm renk sabitleri; ekranlarda doğrudan renk kodu yazılmaz.
 class AppColors {
   const AppColors._();
 

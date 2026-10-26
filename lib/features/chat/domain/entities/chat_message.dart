@@ -1,5 +1,9 @@
+// Dosya: lib/features/chat/domain/entities/chat_message.dart
+// Sohbet mesajı varlığı.
+
 import 'package:equatable/equatable.dart';
 
+/// Bir projedeki tek mesaj.
 class ChatMessage extends Equatable {
   final String id;
   final String projectId;

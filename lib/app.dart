@@ -1,3 +1,8 @@
+// Dosya: lib/app.dart
+// Kök widget (TeamTaskApp).
+// Tüm Bloc/Cubit örneklerini oluşturup ağaca verir; tema, yönlendirme ve
+// Türkçe yerelleştirme ayarlarıyla MaterialApp.router kurulur.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,6 +18,7 @@ import 'features/projects/presentation/bloc/project_bloc.dart';
 import 'features/tasks/presentation/bloc/task_bloc.dart';
 import 'features/tasks/presentation/cubit/my_tasks_cubit.dart';
 
+/// Uygulamanın en üst widget'ı; global state yöneticilerinin sahibidir.
 class TeamTaskApp extends StatefulWidget {
   const TeamTaskApp({super.key});
 
@@ -29,6 +35,7 @@ class _TeamTaskAppState extends State<TeamTaskApp> {
   late final ThemeCubit _themeCubit;
   late final AppRouter _appRouter;
 
+  /// Bloc'lar GetIt üzerinden bir kez oluşturulur ve uygulama boyunca yaşar.
   @override
   void initState() {
     super.initState();
@@ -41,6 +48,7 @@ class _TeamTaskAppState extends State<TeamTaskApp> {
     _appRouter = AppRouter(authBloc: _authBloc);
   }
 
+  /// Uygulama kapanırken tüm Bloc akışları kapatılır.
   @override
   void dispose() {
     _authBloc.close();
@@ -52,6 +60,7 @@ class _TeamTaskAppState extends State<TeamTaskApp> {
     super.dispose();
   }
 
+  /// Bloc'lar ağaca verilir; tema değişince MaterialApp yeniden çizilir.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

@@ -1,7 +1,11 @@
+// Dosya: lib/features/projects/domain/entities/membership.dart
+// Kullanıcı ile proje arasındaki üyelik ilişkisi.
+
 import 'package:equatable/equatable.dart';
 
 import '../enums/project_role.dart';
 
+/// Hangi kullanıcı hangi projede hangi rolde.
 class Membership extends Equatable {
   final String id;
   final String projectId;

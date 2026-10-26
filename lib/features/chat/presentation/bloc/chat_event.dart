@@ -1,5 +1,9 @@
+// Dosya: lib/features/chat/presentation/bloc/chat_event.dart
+// ChatBloc olayları.
+
 import 'package:equatable/equatable.dart';
 
+/// Tüm sohbet olaylarının atası.
 sealed class ChatEvent extends Equatable {
   const ChatEvent();
 
@@ -7,6 +11,7 @@ sealed class ChatEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Mesajları yükle.
 final class ChatMessagesLoadRequested extends ChatEvent {
   final String projectId;
   const ChatMessagesLoadRequested(this.projectId);
@@ -15,6 +20,7 @@ final class ChatMessagesLoadRequested extends ChatEvent {
   List<Object?> get props => [projectId];
 }
 
+/// Mesaj gönder.
 final class ChatMessageSent extends ChatEvent {
   final String projectId;
   final String senderId;

@@ -1,3 +1,7 @@
+// Dosya: test/responsive_test.dart
+// Responsive testi: tüm sayfaları farklı telefon/tablet boyutlarında ve büyük
+// yazı tipinde açar; taşma (overflow) olursa test başarısız olur.
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,8 +24,10 @@ const _screens = <String, Size>{
   'Tablet yatay 1280x800': Size(1280, 800),
 };
 
+/// Oturum açmadan görülen sayfalar.
 const _guestRoutes = ['/login', '/register'];
 
+/// Oturum açtıktan sonra gezilen sayfalar.
 const _authRoutes = [
   '/projects',
   '/projects/new',
@@ -47,6 +53,7 @@ Future<void> _settle(WidgetTester tester) async {
   }
 }
 
+/// Uygulamayı verilen boyutta açar, rotaları gezer ve yakalanan hataları döndürür.
 Future<List<String>> _checkRoutes(
   WidgetTester tester, {
   required Size size,
@@ -90,6 +97,7 @@ Future<List<String>> _checkRoutes(
   return errors;
 }
 
+/// Önce Hive geçici klasörde kurulur, sonra her ekran için test çalışır.
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();

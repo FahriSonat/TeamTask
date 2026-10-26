@@ -1,7 +1,11 @@
+// Dosya: lib/features/tasks/domain/repositories/task_repository.dart
+// Görev işlemleri sözleşmesi.
+
 import '../../../../core/errors/result.dart';
 import '../entities/task.dart';
 import '../enums/task_status.dart';
 
+/// Listeleme, ekleme, güncelleme, silme ve durum değiştirme.
 abstract interface class TaskRepository {
   Future<Result<List<Task>>> getTasksByProject(String projectId);
   Future<Result<List<Task>>> getTasksAssignedTo(String userId);

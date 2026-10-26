@@ -1,8 +1,12 @@
+// Dosya: lib/shared/widgets/app_button.dart
+// Ortak birincil buton (dolu veya çerçeveli, yükleniyor göstergeli).
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 
+/// isLoading true iken buton devre dışı kalır ve dönen gösterge çıkar.
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -23,6 +27,7 @@ class AppButton extends StatelessWidget {
     this.textColor,
   });
 
+  /// Tam genişlikte, en az dokunma yüksekliğinde buton.
   @override
   Widget build(BuildContext context) {
     if (isOutlined) {

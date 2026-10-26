@@ -1,3 +1,6 @@
+// Dosya: lib/features/chat/presentation/pages/project_chat_page.dart
+// Proje sohbet ekranı: mesaj balonları ve mesaj yazma alanı.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +20,7 @@ import '../bloc/chat_event.dart';
 import '../bloc/chat_state.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Bir projenin ekip sohbeti.
 class ProjectChatPage extends StatefulWidget {
   final String projectId;
   const ProjectChatPage({super.key, required this.projectId});
@@ -29,12 +33,14 @@ class _ProjectChatPageState extends State<ProjectChatPage> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
 
+  /// Projenin mesajları yüklenir.
   @override
   void initState() {
     super.initState();
     context.read<ChatBloc>().add(ChatMessagesLoadRequested(widget.projectId));
   }
 
+  /// Metin ve kaydırma denetleyicileri kapatılır.
   @override
   void dispose() {
     _textController.dispose();
@@ -42,6 +48,7 @@ class _ProjectChatPageState extends State<ProjectChatPage> {
     super.dispose();
   }
 
+  /// Boş değilse mesajı gönderir ve alanı temizler.
   void _sendMessage() {
     final text = _textController.text.trim();
     if (text.isEmpty) return;
@@ -61,6 +68,7 @@ class _ProjectChatPageState extends State<ProjectChatPage> {
     _textController.clear();
   }
 
+  /// Kendi mesajlar sağda mavi, diğerleri solda avatar ile gösterilir.
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;

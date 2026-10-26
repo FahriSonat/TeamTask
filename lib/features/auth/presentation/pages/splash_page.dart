@@ -1,3 +1,6 @@
+// Dosya: lib/features/auth/presentation/pages/splash_page.dart
+// Açılış ekranı: logo gösterilirken oturum kontrol edilir.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +13,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 
+/// Oturuma göre /projects veya /login'e geçer.
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -18,12 +22,14 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  /// Ekran açılır açılmaz oturum kontrolü başlatılır.
   @override
   void initState() {
     super.initState();
     context.read<AuthBloc>().add(const AuthCheckRequested());
   }
 
+  /// Mavi arka planda logo, uygulama adı ve yükleniyor göstergesi.
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(

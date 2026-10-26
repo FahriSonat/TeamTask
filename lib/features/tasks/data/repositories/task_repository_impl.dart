@@ -1,3 +1,7 @@
+// Dosya: lib/features/tasks/data/repositories/task_repository_impl.dart
+// TaskRepository'nin yerel gerçeklemesi.
+// Başlık/açıklama doğrulama, atanan kişinin üye olma kontrolü, numara verme ve sıralama.
+
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/constants/app_strings.dart';
@@ -12,6 +16,7 @@ import '../../domain/repositories/task_repository.dart';
 import '../datasources/task_local_datasource.dart';
 import '../models/task_model.dart';
 
+/// Görev iş kuralları.
 class TaskRepositoryImpl implements TaskRepository {
   final TaskLocalDataSource localDataSource;
   final ProjectLocalDataSource projectLocalDataSource;
@@ -23,6 +28,7 @@ class TaskRepositoryImpl implements TaskRepository {
     Uuid? uuid,
   }) : _uuid = uuid ?? const Uuid();
 
+  /// Projenin görevleri, sıralanmış.
   @override
   Future<Result<List<Task>>> getTasksByProject(String projectId) async {
     try {
@@ -35,6 +41,7 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Bana atananlar, sıralanmış.
   @override
   Future<Result<List<Task>>> getTasksAssignedTo(String userId) async {
     try {
@@ -47,6 +54,7 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Doğrular, sıradaki TT numarasını verir ve kaydeder.
   @override
   Future<Result<Task>> addTask(Task task) async {
     final titleError = Validators.validateTaskTitle(task.title);
@@ -89,6 +97,7 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Doğrular ve updatedAt'i yenileyerek kaydeder.
   @override
   Future<Result<Task>> updateTask(Task task) async {
     final titleError = Validators.validateTaskTitle(task.title);
@@ -121,6 +130,7 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Görevi siler.
   @override
   Future<Result<void>> deleteTask(String taskId) async {
     try {
@@ -131,6 +141,7 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Sadece durumu değiştirir (sürükle-bırak ve durum düğmeleri).
   @override
   Future<Result<Task>> changeStatus(String taskId, TaskStatus status) async {
     try {
@@ -150,6 +161,7 @@ class TaskRepositoryImpl implements TaskRepository {
     }
   }
 
+  /// Sıralama: önce öncelik, sonra yakın teslim tarihi, sonra en yeni.
   void _sortTasks(List<Task> tasks) {
     tasks.sort((a, b) {
       // 1. Öncelik sırası: urgent(2) > medium(1) > low(0)

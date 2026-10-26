@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/widgets/kanban_column.dart
+// Panodaki tek bir kolon: başlık, sayaç, sürüklenebilir kartlar, "Görev ekle" düğmesi.
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_strings.dart';
@@ -10,6 +13,7 @@ import '../../domain/entities/task.dart';
 import '../../domain/enums/task_status.dart';
 import 'task_card.dart';
 
+/// Hem bırakma hedefi (DragTarget) hem kart listesidir.
 class KanbanColumn extends StatelessWidget {
   final TaskStatus status;
   final String title;
@@ -32,15 +36,18 @@ class KanbanColumn extends StatelessWidget {
     required this.onAddTask,
   });
 
+  /// Atanan kullanıcı ID'sini ada çevirir.
   String _getAssigneeName(String? assigneeId) {
     if (assigneeId == null) return '';
     final member = members.where((m) => m.id == assigneeId).firstOrNull;
     return member?.name ?? '';
   }
 
+  /// Kart üzerine gelinince kolon vurgulanır; bırakılınca onTaskDropped çağrılır.
   @override
   Widget build(BuildContext context) {
     return DragTarget<Task>(
+      // Kart zaten bu kolondaysa bırakma kabul edilmez.
       onWillAcceptWithDetails: (details) => details.data.status != status,
       onAcceptWithDetails: (details) {
         onTaskDropped(details.data, status);
@@ -128,6 +135,7 @@ class KanbanColumn extends StatelessWidget {
                             task.assigneeId,
                           );
 
+                          // Karta uzun basınca sürükleme başlar.
                           return LongPressDraggable<Task>(
                             data: task,
                             feedback: Material(

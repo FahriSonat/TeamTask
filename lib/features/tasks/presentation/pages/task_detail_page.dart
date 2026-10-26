@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/pages/task_detail_page.dart
+// Görev detayı: başlık, açıklama, hızlı durum değiştirme, atanan, tarihler, düzenle/sil.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +25,7 @@ import '../bloc/task_event.dart';
 import '../bloc/task_state.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Tek görevin detay ekranı.
 class TaskDetailPage extends StatefulWidget {
   final String projectId;
   final String taskId;
@@ -37,6 +41,7 @@ class TaskDetailPage extends StatefulWidget {
 }
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
+  /// Görev listesi ve projenin üyeleri yüklenir.
   @override
   void initState() {
     super.initState();
@@ -44,6 +49,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     context.read<ProjectBloc>().add(ProjectSelectRequested(widget.projectId));
   }
 
+  /// Silme onay diyaloğu ister; durum düğmeleri TaskBloc'a olay gönderir.
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskBloc, TaskState>(
@@ -264,6 +270,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 }
 
+/// İkon + etiket + değer satırı (dar ekranda değer kısaltılır).
 class _DetailRow extends StatelessWidget {
   final IconData icon;
   final String label;

@@ -1,3 +1,6 @@
+// Dosya: lib/shared/widgets/status_badge.dart
+// Durum rozeti (Yapılacak / Devam ediyor / Tamamlandı).
+
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_strings.dart';
@@ -6,11 +9,13 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/theme_context_extension.dart';
 import '../../features/tasks/domain/enums/task_status.dart';
 
+/// Duruma göre renk ve metin.
 class StatusBadge extends StatelessWidget {
   final TaskStatus status;
 
   const StatusBadge({super.key, required this.status});
 
+  /// Renkler açık/koyu temaya göre seçilir.
   @override
   Widget build(BuildContext context) {
     final (bg, fg, text, icon) = switch (status) {

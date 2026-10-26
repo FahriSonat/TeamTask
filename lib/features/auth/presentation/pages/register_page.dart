@@ -1,3 +1,6 @@
+// Dosya: lib/features/auth/presentation/pages/register_page.dart
+// Kayıt ekranı (ad, e-posta, parola, parola tekrarı).
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +18,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Yeni hesap oluşturma formu.
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -43,6 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  /// Tüm alanları doğrular ve AuthBloc'a kayıt olayı gönderir.
   void _submit() {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
@@ -73,6 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  /// Kayıt başarılıysa projelere geçer, hatada SnackBar gösterir.
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(

@@ -1,8 +1,12 @@
+// Dosya: lib/features/auth/data/models/user_model.dart
+// Kullanıcının Hive'da saklanan hali (parola özeti dahil) ve Hive adapter'ı.
+
 import 'package:hive/hive.dart';
 
 import '../../../../core/constants/hive_type_ids.dart';
 import '../../domain/entities/user.dart';
 
+/// Veritabanı modeli; User varlığına dönüştürülerek arayüze verilir.
 class UserModel {
   final String id;
   final String name;
@@ -18,10 +22,12 @@ class UserModel {
     required this.createdAt,
   });
 
+  /// Model -> domain varlığı (parola özeti dışarı çıkmaz).
   User toEntity() {
     return User(id: id, name: name, email: email, createdAt: createdAt);
   }
 
+  /// Domain varlığı + parola özeti -> model.
   factory UserModel.fromEntity(User user, {required String passwordHash}) {
     return UserModel(
       id: user.id,
@@ -32,6 +38,7 @@ class UserModel {
     );
   }
 
+  /// Seed JSON'undan model oluşturur.
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
@@ -42,6 +49,7 @@ class UserModel {
     );
   }
 
+  /// Modeli JSON'a çevirir.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -53,10 +61,12 @@ class UserModel {
   }
 }
 
+/// Elle yazılmış Hive adapter'ı (kod üretimi kullanılmadı).
 class UserModelAdapter extends TypeAdapter<UserModel> {
   @override
   final int typeId = HiveTypeIds.userModel;
 
+  /// Diskten alan numarası -> değer şeklinde okur.
   @override
   UserModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
@@ -72,6 +82,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
     );
   }
 
+  /// Alanları sırayla (0-4) diske yazar.
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer

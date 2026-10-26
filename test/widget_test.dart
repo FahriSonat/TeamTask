@@ -1,3 +1,6 @@
+// Dosya: test/widget_test.dart
+// Ortak widget testleri: öncelik rozeti, durum rozeti, boş durum ekranı.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:team_task/core/constants/app_strings.dart';
@@ -7,6 +10,7 @@ import 'package:team_task/shared/widgets/empty_view.dart';
 import 'package:team_task/shared/widgets/priority_badge.dart';
 import 'package:team_task/shared/widgets/status_badge.dart';
 
+/// Test grubu.
 void main() {
   group('Widget UI Tests', () {
     testWidgets('PriorityBadge displays correct text and icon for urgent', (

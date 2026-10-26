@@ -1,8 +1,13 @@
+// Dosya: lib/core/utils/validators.dart
+// Form doğrulama kuralları. Hata varsa mesaj, yoksa null döner.
+
 import '../constants/app_strings.dart';
 
+/// Hem formlarda hem repository'lerde kullanılan ortak kurallar.
 class Validators {
   const Validators._();
 
+  /// Boş olmamalı ve ad@alan.uzanti biçiminde olmalı.
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
@@ -15,6 +20,7 @@ class Validators {
     return null;
   }
 
+  /// En az 6 karakter.
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return AppStrings.requiredField;
@@ -25,6 +31,7 @@ class Validators {
     return null;
   }
 
+  /// Ad soyad 2-50 karakter.
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
@@ -36,6 +43,7 @@ class Validators {
     return null;
   }
 
+  /// Proje adı 2-60 karakter.
   static String? validateProjectName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
@@ -47,6 +55,7 @@ class Validators {
     return null;
   }
 
+  /// Görev başlığı 1-80 karakter.
   static String? validateTaskTitle(String? value) {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
@@ -58,6 +67,7 @@ class Validators {
     return null;
   }
 
+  /// Açıklama en fazla 500 karakter (boş olabilir).
   static String? validateTaskDescription(String? value) {
     if (value != null && value.length > 500) {
       return AppStrings.descTooLong;

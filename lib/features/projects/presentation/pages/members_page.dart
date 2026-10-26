@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/presentation/pages/members_page.dart
+// Proje bilgisi, davet kodu kopyalama ve ekip üyeleri ekranı.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +21,7 @@ import '../bloc/project_event.dart';
 import '../bloc/project_state.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Projenin ekip ekranı.
 class MembersPage extends StatefulWidget {
   final String projectId;
   const MembersPage({super.key, required this.projectId});
@@ -27,6 +31,7 @@ class MembersPage extends StatefulWidget {
 }
 
 class _MembersPageState extends State<MembersPage> {
+  /// Projeler yüklenmemişse yükler, ardından üyeleri getirir.
   @override
   void initState() {
     super.initState();
@@ -38,6 +43,7 @@ class _MembersPageState extends State<MembersPage> {
     pBloc.add(ProjectMembersLoadRequested(widget.projectId));
   }
 
+  /// Alttan açılan sayfada ad + e-posta ile demo üye ekleme.
   void _showAddMemberDialog(BuildContext context) {
     final nameCtrl = TextEditingController();
     final emailCtrl = TextEditingController();
@@ -106,6 +112,7 @@ class _MembersPageState extends State<MembersPage> {
     );
   }
 
+  /// Proje kartı, davet kodu ve üye listesi (sahip "Yönetici" etiketiyle).
   @override
   Widget build(BuildContext context) {
     return Scaffold(

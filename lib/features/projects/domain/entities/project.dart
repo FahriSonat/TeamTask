@@ -1,5 +1,9 @@
+// Dosya: lib/features/projects/domain/entities/project.dart
+// Proje varlığı (ad, açıklama, davet kodu, sahip).
+
 import 'package:equatable/equatable.dart';
 
+/// Bir ekip projesi.
 class Project extends Equatable {
   final String id;
   final String name;
@@ -19,6 +23,7 @@ class Project extends Equatable {
     required this.updatedAt,
   });
 
+  /// Bazı alanları değiştirilmiş yeni kopya.
   Project copyWith({
     String? id,
     String? name,

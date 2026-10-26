@@ -1,3 +1,7 @@
+// Dosya: lib/features/auth/data/repositories/auth_repository_impl.dart
+// AuthRepository'nin yerel (Hive) gerçeklemesi.
+// Doğrulama, e-posta tekilliği, parola özeti kontrolü ve oturum yönetimi burada.
+
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/constants/app_strings.dart';
@@ -10,6 +14,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../models/user_model.dart';
 
+/// Kimlik doğrulama iş kuralları.
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
   final Uuid _uuid;
@@ -17,6 +22,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.localDataSource, Uuid? uuid})
     : _uuid = uuid ?? const Uuid();
 
+  /// Alanları doğrular, e-posta kayıtlıysa reddeder, özetlenmiş parolayla kaydeder.
   @override
   Future<Result<User>> register({
     required String name,
@@ -66,6 +72,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  /// Kullanıcıyı bulur ve parola özetini karşılaştırır.
   @override
   Future<Result<User>> login({
     required String email,
@@ -97,6 +104,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  /// Oturumdaki kullanıcı silinmişse oturumu da temizler.
   @override
   Future<Result<User?>> getCurrentUser() async {
     try {
@@ -117,6 +125,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  /// Oturum kaydını siler.
   @override
   Future<Result<void>> logout() async {
     try {

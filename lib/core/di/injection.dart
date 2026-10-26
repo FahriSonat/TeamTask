@@ -1,3 +1,8 @@
+// Dosya: lib/core/di/injection.dart
+// Bağımlılık enjeksiyonu (GetIt) ve veritabanı kurulumu.
+// Hive başlatılır, adapter'lar kaydedilir, kutular açılır, ilk açılışta demo
+// verisi yüklenir ve datasource -> repository -> bloc zinciri kaydedilir.
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -34,6 +39,7 @@ import '../../features/chat/data/repositories/chat_repository_impl.dart';
 import '../../features/chat/domain/repositories/chat_repository.dart';
 import '../../features/chat/presentation/bloc/chat_bloc.dart';
 
+/// Uygulama genelinde kullanılan servis bulucu (service locator).
 final sl = GetIt.instance;
 
 /// [storagePath] verilirse Hive bu klasörde açılır (testler için);
@@ -133,6 +139,7 @@ Future<void> initInjection({String? storagePath}) async {
   sl.registerFactory<ChatBloc>(() => ChatBloc(chatRepository: sl()));
 }
 
+/// assets/seed/teamtask_seed.json dosyasındaki demo verisini yalnızca ilk açılışta yükler.
 Future<void> _applySeedIfNeeded({
   required Box<UserModel> userBox,
   required Box<ProjectModel> projectBox,

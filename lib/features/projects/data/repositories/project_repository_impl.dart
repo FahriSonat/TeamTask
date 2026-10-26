@@ -1,3 +1,7 @@
+// Dosya: lib/features/projects/data/repositories/project_repository_impl.dart
+// ProjectRepository'nin yerel gerçeklemesi.
+// Proje adı doğrulama, davet kodu üretimi, sahibin otomatik üye yapılması burada.
+
 import 'dart:math';
 
 import 'package:uuid/uuid.dart';
@@ -17,6 +21,7 @@ import '../datasources/project_local_datasource.dart';
 import '../models/membership_model.dart';
 import '../models/project_model.dart';
 
+/// Proje iş kuralları.
 class ProjectRepositoryImpl implements ProjectRepository {
   final ProjectLocalDataSource localDataSource;
   final AuthLocalDataSource authLocalDataSource;
@@ -28,6 +33,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     Uuid? uuid,
   }) : _uuid = uuid ?? const Uuid();
 
+  /// Kullanıcının projeleri.
   @override
   Future<Result<List<Project>>> getProjectsForUser(String userId) async {
     try {
@@ -38,6 +44,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// Adı doğrular, davet kodu üretir, sahibi üye yapar ve projeyi aktif seçer.
   @override
   Future<Result<Project>> createProject({
     required String name,
@@ -83,6 +90,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// Tek proje.
   @override
   Future<Result<Project?>> getProject(String projectId) async {
     try {
@@ -93,6 +101,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// Üyelikleri kullanıcı listesine çevirir.
   @override
   Future<Result<List<User>>> getMembers(String projectId) async {
     try {
@@ -107,6 +116,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// Demo üye ekler; kullanıcı yoksa varsayılan parolayla (123456) oluşturur.
   @override
   Future<Result<Membership>> addLocalMember({
     required String projectId,
@@ -152,6 +162,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// Aktif projeyi kaydeder.
   @override
   Future<Result<void>> setActiveProject(String projectId) async {
     try {
@@ -162,6 +173,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// Aktif projeyi döndürür.
   @override
   Future<Result<Project?>> getActiveProject() async {
     try {
@@ -176,6 +188,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     }
   }
 
+  /// "TT" + karışması zor 4 karakter (0/O, 1/I yok) davet kodu.
   String _generateInviteCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     final random = Random();

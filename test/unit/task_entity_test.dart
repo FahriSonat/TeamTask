@@ -1,8 +1,12 @@
+// Dosya: test/unit/task_entity_test.dart
+// Task varlığı ve enum testleri: TT kodu, gecikme hesabı, storageKey dönüşümleri.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:team_task/features/tasks/domain/entities/task.dart';
 import 'package:team_task/features/tasks/domain/enums/task_priority.dart';
 import 'package:team_task/features/tasks/domain/enums/task_status.dart';
 
+/// Test grubu.
 void main() {
   group('Task Entity & Enums Test', () {
     test('task code generates TT-number', () {

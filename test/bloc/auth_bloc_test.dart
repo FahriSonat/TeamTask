@@ -1,3 +1,7 @@
+// Dosya: test/bloc/auth_bloc_test.dart
+// AuthBloc testleri: başarılı giriş, hatalı giriş ve çıkış.
+// Repository mocktail ile taklit edilir.
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,6 +15,7 @@ import 'package:team_task/features/auth/presentation/bloc/auth_state.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
+/// Test grubu.
 void main() {
   late MockAuthRepository mockAuthRepository;
   late AuthBloc authBloc;

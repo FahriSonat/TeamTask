@@ -1,3 +1,6 @@
+// Dosya: test/unit/theme_cubit_test.dart
+// ThemeCubit testleri: varsayılan sistem teması ve açık/koyu geçiş.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -6,6 +9,7 @@ import 'package:team_task/core/theme/theme_cubit.dart';
 
 class MockBox extends Mock implements Box {}
 
+/// Test grubu.
 void main() {
   late MockBox mockBox;
   late ThemeCubit themeCubit;

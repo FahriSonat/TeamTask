@@ -1,3 +1,6 @@
+// Dosya: test/bloc/chat_bloc_test.dart
+// ChatBloc testleri: mesaj yükleme ve mesaj gönderme.
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -10,6 +13,7 @@ import 'package:team_task/features/chat/presentation/bloc/chat_state.dart';
 
 class MockChatRepository extends Mock implements ChatRepository {}
 
+/// Test grubu.
 void main() {
   late MockChatRepository mockChatRepository;
   late ChatBloc chatBloc;

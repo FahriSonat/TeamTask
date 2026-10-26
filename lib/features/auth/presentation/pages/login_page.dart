@@ -1,3 +1,6 @@
+// Dosya: lib/features/auth/presentation/pages/login_page.dart
+// Giriş ekranı (e-posta + parola).
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +18,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Giriş formu.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -36,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  /// Alanları doğrular; geçerliyse AuthBloc'a giriş olayı gönderir.
   void _submit() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -55,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  /// Başarılı girişte projelere geçer, hatada kırmızı SnackBar gösterir.
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -79,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
             child: SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppSpacing.formPadding),
+                // İçerik kısa olsa bile ekranı doldursun diye en az ekran yüksekliği verilir (alt bağlantı en altta durur).
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight:

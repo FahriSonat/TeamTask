@@ -1,3 +1,8 @@
+// Dosya: lib/core/constants/hive_type_ids.dart
+// Hive TypeAdapter kimlikleri.
+// DİKKAT: Bu sayılar değiştirilirse cihazdaki kayıtlı veriler okunamaz.
+
+/// Her model için benzersiz Hive tip numarası.
 class HiveTypeIds {
   const HiveTypeIds._();
 

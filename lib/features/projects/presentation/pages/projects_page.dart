@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/presentation/pages/projects_page.dart
+// Projeler listesi: kullanıcının projeleri, aktif proje vurgusu, tema ve çıkış.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +22,7 @@ import '../bloc/project_event.dart';
 import '../bloc/project_state.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Giriş sonrası ilk ekran.
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
 
@@ -33,6 +37,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     _loadProjects();
   }
 
+  /// Oturumdaki kullanıcının projelerini yükler.
   void _loadProjects() {
     final authState = context.read<AuthBloc>().state;
     if (authState is Authenticated) {
@@ -40,6 +45,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     }
   }
 
+  /// Çıkış yapılınca login'e döner; proje kartına dokununca panosu açılır.
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(

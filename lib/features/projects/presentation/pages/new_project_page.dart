@@ -1,3 +1,6 @@
+// Dosya: lib/features/projects/presentation/pages/new_project_page.dart
+// Yeni proje oluşturma formu.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +20,7 @@ import '../bloc/project_state.dart';
 import '../cubit/project_form_cubit.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Form Cubit'ini sağlar.
 class NewProjectPage extends StatelessWidget {
   const NewProjectPage({super.key});
 
@@ -29,6 +33,7 @@ class NewProjectPage extends StatelessWidget {
   }
 }
 
+/// Asıl form ekranı.
 class _NewProjectView extends StatefulWidget {
   const _NewProjectView();
 
@@ -51,6 +56,7 @@ class _NewProjectViewState extends State<_NewProjectView> {
     super.dispose();
   }
 
+  /// Formu doğrular ve ProjectBloc'a oluşturma olayı gönderir.
   void _submit() {
     final formCubit = context.read<ProjectFormCubit>();
     if (!formCubit.validate()) return;
@@ -69,6 +75,7 @@ class _NewProjectViewState extends State<_NewProjectView> {
     );
   }
 
+  /// Oluşturma başarılıysa yeni projenin panosuna geçer.
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProjectBloc, ProjectState>(

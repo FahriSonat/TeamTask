@@ -1,3 +1,6 @@
+// Dosya: lib/shared/widgets/empty_view.dart
+// Liste boşken gösterilen ikon + başlık + açıklama (+ isteğe bağlı buton).
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -5,6 +8,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import 'app_button.dart';
 
+/// Boş durum ekranı.
 class EmptyView extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -21,6 +25,7 @@ class EmptyView extends StatelessWidget {
     this.onAction,
   });
 
+  /// Ortalanmış içerik.
   @override
   Widget build(BuildContext context) {
     return Center(

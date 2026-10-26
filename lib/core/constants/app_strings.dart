@@ -1,3 +1,8 @@
+// Dosya: lib/core/constants/app_strings.dart
+// Arayüzde görünen tüm Türkçe metinler.
+// Metinler tek yerde durur; değiştirmek veya çeviri eklemek kolaylaşır.
+
+/// Sabit metin deposu; örneği oluşturulmaz, alanlara AppStrings.x ile erişilir.
 class AppStrings {
   const AppStrings._();
 

@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/pages/task_form_page.dart
+// Görev ekleme ve düzenleme formu (tek sayfa, iki mod).
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +26,7 @@ import '../bloc/task_state.dart';
 import '../cubit/task_form_cubit.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// taskId varsa düzenleme, yoksa yeni görev modu.
 class TaskFormPage extends StatelessWidget {
   final String projectId;
   final String? taskId;
@@ -59,6 +63,7 @@ class TaskFormPage extends StatelessWidget {
   }
 }
 
+/// Asıl form ekranı.
 class _TaskFormView extends StatefulWidget {
   final String projectId;
   final Task? initialTask;
@@ -73,6 +78,7 @@ class _TaskFormViewState extends State<_TaskFormView> {
   late final TextEditingController _titleController;
   late final TextEditingController _descController;
 
+  /// Metin alanları formun başlangıç değerleriyle doldurulur.
   @override
   void initState() {
     super.initState();
@@ -88,6 +94,7 @@ class _TaskFormViewState extends State<_TaskFormView> {
     super.dispose();
   }
 
+  /// Türkçe tarih seçici açar.
   Future<void> _pickDueDate(BuildContext context, DateTime? currentDue) async {
     final now = DateTime.now();
     final initialDate = currentDue ?? now;
@@ -115,6 +122,7 @@ class _TaskFormViewState extends State<_TaskFormView> {
     }
   }
 
+  /// Doğrular; düzenlemede TaskUpdated, eklemede TaskAdded gönderir ve kapanır.
   void _submit() {
     final cubit = context.read<TaskFormCubit>();
     if (!cubit.validate()) return;
@@ -159,6 +167,7 @@ class _TaskFormViewState extends State<_TaskFormView> {
     _close();
   }
 
+  /// Başlık, açıklama, öncelik, atanan kişi ve teslim tarihi alanları.
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.initialTask != null;

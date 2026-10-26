@@ -1,7 +1,12 @@
+// Dosya: lib/core/theme/theme_context_extension.dart
+// BuildContext üzerine temaya duyarlı renk kısayolları.
+// Örn. context.inkColor açık temada koyu, koyu temada açık renk verir.
+
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
+/// Her ekranda "isDark ? a : b" yazmamak için kısayollar.
 extension ThemeContextExtension on BuildContext {
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 

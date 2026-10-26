@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/cubit/task_form_cubit.dart
+// Görev ekleme/düzenleme formunun anlık durumu ve doğrulaması.
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,6 +9,7 @@ import '../../domain/entities/task.dart';
 import '../../domain/enums/task_priority.dart';
 import '../../domain/enums/task_status.dart';
 
+/// Formdaki tüm alanlar ve hata mesajları.
 class TaskFormState extends Equatable {
   final String title;
   final String description;
@@ -83,6 +87,7 @@ class TaskFormState extends Equatable {
   ];
 }
 
+/// Düzenlemede mevcut görevle, eklemede seçilen kolonla başlar.
 class TaskFormCubit extends Cubit<TaskFormState> {
   TaskFormCubit({Task? initialTask, TaskStatus defaultStatus = TaskStatus.todo})
     : super(
@@ -100,6 +105,7 @@ class TaskFormCubit extends Cubit<TaskFormState> {
             : TaskFormState(status: defaultStatus),
       );
 
+  /// Başlık değişti -> anında doğrula.
   void titleChanged(String value) {
     final error = Validators.validateTaskTitle(value);
     emit(
@@ -111,6 +117,7 @@ class TaskFormCubit extends Cubit<TaskFormState> {
     );
   }
 
+  /// Açıklama değişti -> 500 karakter kontrolü.
   void descriptionChanged(String value) {
     final error = Validators.validateTaskDescription(value);
     emit(
@@ -122,24 +129,29 @@ class TaskFormCubit extends Cubit<TaskFormState> {
     );
   }
 
+  /// Durum seçildi.
   void statusChanged(TaskStatus status) {
     emit(state.copyWith(status: status));
   }
 
+  /// Öncelik seçildi.
   void priorityChanged(TaskPriority priority) {
     emit(state.copyWith(priority: priority));
   }
 
+  /// Atanan kişi seçildi (null = atanmamış).
   void assigneeChanged(String? assigneeId) {
     emit(
       state.copyWith(assigneeId: assigneeId, clearAssignee: assigneeId == null),
     );
   }
 
+  /// Teslim tarihi seçildi / temizlendi.
   void dueDateChanged(DateTime? dueDate) {
     emit(state.copyWith(dueDate: dueDate, clearDueDate: dueDate == null));
   }
 
+  /// Kaydetmeden önce son kontrol.
   bool validate() {
     final tError = Validators.validateTaskTitle(state.title);
     final dError = Validators.validateTaskDescription(state.description);

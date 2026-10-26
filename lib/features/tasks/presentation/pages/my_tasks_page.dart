@@ -1,3 +1,6 @@
+// Dosya: lib/features/tasks/presentation/pages/my_tasks_page.dart
+// "Görevlerim" ekranı: bana atanan görevler ve durum filtreleri.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +18,7 @@ import '../cubit/my_tasks_cubit.dart';
 import '../widgets/task_card.dart';
 import '../../../../shared/widgets/responsive_center.dart';
 
+/// Kişisel görev listesi.
 class MyTasksPage extends StatefulWidget {
   const MyTasksPage({super.key});
 
@@ -29,6 +33,7 @@ class _MyTasksPageState extends State<MyTasksPage> {
     _loadTasks();
   }
 
+  /// Oturumdaki kullanıcının görevlerini yükler.
   void _loadTasks() {
     final authState = context.read<AuthBloc>().state;
     if (authState is Authenticated) {
@@ -36,6 +41,7 @@ class _MyTasksPageState extends State<MyTasksPage> {
     }
   }
 
+  /// Özet satırı, filtre chip'leri ve aşağı çekip yenilenebilen liste.
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
@@ -190,6 +196,7 @@ class _MyTasksPageState extends State<MyTasksPage> {
   }
 }
 
+/// Seçiliyken mavi dolgulu filtre chip'i.
 class _FilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;
